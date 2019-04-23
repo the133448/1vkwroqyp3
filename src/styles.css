@@ -1,0 +1,281 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+*:focus {
+  outline: none;
+}
+body {
+  font-family: Arial;
+  background-color: #3498db;
+  padding: 50px;
+}
+a {
+  text-decoration: none;
+}
+.login {
+  margin: 20px auto;
+  width: 300px;
+}
+.login-screen {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.app-title {
+  text-align: center;
+  color: #777;
+}
+
+.login-form {
+  text-align: center;
+}
+.login-field {
+  margin-bottom: 10px;
+}
+
+input {
+  text-align: center;
+  background-color: #ecf0f1;
+  border: 2px solid transparent;
+  border-radius: 3px;
+  font-size: 16px;
+  font-weight: 200;
+  padding: 10px 0;
+  width: 250px;
+  transition: border 0.5s;
+}
+
+input:focus {
+  border: 2px solid #3498db;
+  box-shadow: none;
+}
+
+.btn {
+  border: 2px solid transparent;
+  background: #3498db;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 25px;
+  padding: 10px 0;
+  text-decoration: none;
+  text-shadow: none;
+  border-radius: 3px;
+  box-shadow: none;
+  transition: 0.25s;
+  display: block;
+  width: 250px;
+  margin: 0 auto;
+}
+
+.btn:hover {
+  background-color: #2980b9;
+}
+.btn:disabled {
+  background: #777777;
+}
+
+.login-link {
+  font-size: 12px;
+  color: #444;
+  display: block;
+  margin-top: 12px;
+}
+
+.alert {
+  padding: 20px;
+  background-color: #f44336;
+  color: white;
+  opacity: 1;
+  transition: opacity 0.6s;
+  margin-bottom: 15px;
+}
+
+.alert.success {
+  background-color: #4caf50;
+}
+.alert.info {
+  background-color: #2196f3;
+}
+.alert.warning {
+  background-color: #ff9800;
+}
+
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.closebtn:hover {
+  color: black;
+}
+
+.sign-up {
+  padding-top: 50px;
+}
+.sign-up-text {
+  color: #777777;
+  border-bottom: 1px solid #2196f3;
+}
+.su-text {
+  color: #777777;
+}
+.logo {
+  width: 25%;
+  margin-bottom: 10%;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  background: #ffffff;
+}
+td,
+th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  background-color: #2aaf25;
+  width: 100%;
+  min-height: 50px;
+  margin-bottom: 20px;
+  line-height: 20px;
+
+  padding-top: 15px;
+  padding-bottom: 15px;
+  color: #fff;
+
+  padding: 10px 15px;
+  border-radius: 5px;
+}
+.logout {
+  color: #fff;
+  background-color: #3163ee;
+  padding: 10px 15px;
+  border-radius: 3px;
+  line-height: 30px;
+  box-shadow: none;
+  border: 1px solid transparent;
+}
+.logout:hover {
+  background-color: #2a57d3;
+}
+.OffenceChooser {
+  display: flex;
+  flex-wrap: wrap;
+  text-align: center;
+  justify-content: center;
+}
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  outline: 0;
+  box-shadow: none;
+  border: 0 !important;
+  background: #2c3e50;
+  background-image: none;
+}
+/* Custom Select */
+.select {
+  position: relative;
+  display: block;
+  width: 20em;
+  height: 3em;
+  line-height: 3;
+  background: #2c3e50;
+  overflow: hidden;
+  border-radius: 0.25em;
+}
+select {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0 0 0 0.5em;
+  color: #fff;
+  cursor: pointer;
+}
+select::-ms-expand {
+  display: none;
+}
+/* Arrow */
+.select::after {
+  content: "\25BC";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0 1em;
+  background: #34495e;
+  pointer-events: none;
+}
+/* Transition */
+.select:hover::after {
+  color: #f39c12;
+}
+.select::after {
+  -webkit-transition: 0.25s all ease;
+  -o-transition: 0.25s all ease;
+  transition: 0.25s all ease;
+}
+.searchBtn {
+  color: #f39c12;
+  background-color: #34495e;
+  padding: 10px 15px;
+  border-radius: 3px;
+  margin-left: 50px;
+  box-shadow: none;
+  border: 1px solid transparent;
+}
+.searchBtn:hover {
+  background-color: #162029;
+}
+.searchBtn:disabled {
+  background-color: #4a6881;
+  color: #e6bb77;
+}
+
+.filter {
+  display: flex;
+  justify-content: space-between;
+}
+
+.option {
+  display: inline-block;
+  width: 10px;
+}
+
+.capital {
+  text-transform: capitalize;
+}
+html {
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  position: relative;
+  padding-bottom: [footer-height];
+}
+.footer {
+  text-align: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: [footer-height];
+}
