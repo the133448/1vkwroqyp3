@@ -57,7 +57,7 @@ function FormPage(props) {
 
   return (
     <div className="login App">
-      <img className="logo" src="./logo.png" alt="QLD Police Logo" />
+      <img className="logo" src="./logo-min.png" alt="QLD Police Logo" />
       <div className="login-screen">
         <div className="app-title">
           <h1>{props.login ? "Login" : "Register"}</h1>
