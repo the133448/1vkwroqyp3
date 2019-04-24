@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Redirect } from "react-router";
 
 let API_KEY = null;
 const API_PATH = "https://cab230.hackhouse.sh/";
@@ -69,6 +70,7 @@ export function isLoggedIn() {
     //     100  (current time) >   150 (expires time)
     if (new Date().getTime() >= localStorage.getItem("EXPIRES_KEY")) {
       alert("Whoops, your session has expired. Please login again.");
+
       logOut();
       return false;
     }

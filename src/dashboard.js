@@ -215,6 +215,7 @@ function Results(props) {
 
 export function DashboardPage() {
   const [offence, setOffence] = useState("");
+  document.title = "Dashboard - Home";
   return (
     <div>
       <div className="navbar">

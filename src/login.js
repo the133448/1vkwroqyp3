@@ -5,13 +5,17 @@ import { useLogin } from "./api";
 export function AuthPage(props) {
   const [login, setLogin] = useState("");
   return props.login ? (
-    <LoginPage prefill={login} />
+    <LoginPage
+      prefill={login}
+      expired={props.location.hash === "#expire" ? true : false}
+    />
   ) : (
     <RegisterPage onSubmit={setLogin} />
   );
 }
 
 function LoginPage(props) {
+  document.title = "Login";
   const [loginData, setloginData] = useState(null);
   const { loading, error } = useLogin(loginData, true);
 
@@ -22,11 +26,13 @@ function LoginPage(props) {
       error={error}
       prefill={props.prefill}
       onSubmit={setloginData}
+      expired={props.expired}
     />
   );
 }
 
 function RegisterPage(props) {
+  document.title = "Register";
   const [loginData, setloginData] = useState(null);
   const { loading, error } = useLogin(loginData, false);
   if (error === 111) props.onSubmit(loginData);
@@ -43,6 +49,7 @@ function RegisterPage(props) {
 
 function FormPage(props) {
   let prefill = false;
+
   function submitEvent(event) {
     event.preventDefault();
 
@@ -79,10 +86,17 @@ function FormPage(props) {
             Please Login now
           </div>
         ) : null}
-
+        {props.expired ? (
+          <div className="alert warning">
+            <strong>Session Timeout!</strong>
+            <br />
+            Your session has expired. Please relogin
+            {props.error}
+          </div>
+        ) : null}
         <form onSubmit={submitEvent}>
           <input
-            type="email" //TODO Change to email
+            type="text" //TODO Change to email
             className="login-field"
             placeholder="email"
             id="email"

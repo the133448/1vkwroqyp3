@@ -13,6 +13,7 @@ import {
 import "./styles.css";
 
 function NotFound() {
+  document.title = "404 - Page not Found";
   return (
     <div>
       <h1>404</h1>
@@ -41,11 +42,11 @@ function Routing() {
         />
         <Route
           path="/login"
-          render={() =>
+          render={props =>
             isLoggedIn() ? (
               <Redirect to="/dashboard" />
             ) : (
-              <AuthPage login={true} />
+              <AuthPage login={true} {...props} />
             )
           }
         />
@@ -79,9 +80,9 @@ function App() {
     <div>
       <Routing />
       <div className="footer">
-        <pre>Daniel Johns [V1.3.2] </pre>
         <p>
-          {process.env.REACT_APP_NAME}-{process.env.REACT_APP_VERSION})
+          {process.env.REACT_APP_NAME}-{process.env.REACT_APP_VERSION} (Daniel
+          Johns - n9961119)
         </p>
       </div>
     </div>
