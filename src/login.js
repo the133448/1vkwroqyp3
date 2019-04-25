@@ -101,6 +101,7 @@ function FormPage(props) {
             placeholder="email"
             id="email"
             name="email"
+            readOnly={prefill ? true : false}
             value={prefill ? props.prefill.get("email") : undefined}
           />
           <input
@@ -109,6 +110,7 @@ function FormPage(props) {
             placeholder="password"
             id="password"
             name="password"
+            readOnly={prefill ? true : false}
             value={prefill ? props.prefill.get("password") : undefined}
           />
 

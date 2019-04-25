@@ -112,13 +112,15 @@ function getList(list) {
   return fetch(endPoint).then(res => res.json());
 }
 
-export function useSearch(offence) {
+export function useSearch(offence, filter) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [result, setResult] = useState([]);
+  let query = `offence=${offence}&${filter}`;
+
   useEffect(() => {
     setLoading(true);
-    getSearch(offence)
+    getSearch(query)
       .then(result => {
         console.log("result was  ok");
         //setError("Failed to communicate with Login server");
@@ -140,7 +142,7 @@ export function useSearch(offence) {
 }
 
 function getSearch(offence) {
-  const endPoint = `${API_PATH}search?offence=${offence}`;
+  const endPoint = `${API_PATH}search?${offence}`;
   return fetch(endPoint, {
     method: "GET",
     headers: {

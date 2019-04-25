@@ -89,6 +89,7 @@ function Offences(props) {
     );
 
   const handleSubmit = () => {
+    props.onFilterSubmit(filter);
     props.onSubmit(chosenOffence);
   };
   const handleFilterModal = open => {
@@ -153,7 +154,7 @@ function Offences(props) {
   );
 }
 function Results(props) {
-  const { loading, result, error } = useSearch(props.offence);
+  const { loading, result, error } = useSearch(props.offence, props.filter);
   const [search, setSearch] = useState("");
   if (loading)
     return (
@@ -215,6 +216,7 @@ function Results(props) {
 
 export function DashboardPage() {
   const [offence, setOffence] = useState("");
+  const [filter, setFilter] = useState("");
   document.title = "Dashboard - Home";
   return (
     <div>
@@ -226,9 +228,11 @@ export function DashboardPage() {
           </button>
         </Link>
       </div>
-      <h1>Dashboard</h1>
-      <Offences onSubmit={setOffence} />
-      {offence ? <Results offence={offence} /> : ""}
+      <h1>
+        Dashboard - {offence} - {filter}
+      </h1>
+      <Offences onSubmit={setOffence} onFilterSubmit={setFilter} />
+      {offence ? <Results offence={offence} filter={filter} /> : ""}
     </div>
   );
 }
