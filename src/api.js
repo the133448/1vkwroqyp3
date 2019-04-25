@@ -133,7 +133,7 @@ export function useSearch(offence, filter) {
           setError("Unable to communicate with API Server");
         else setError(JSON.parse(resError.message).error);
       });
-  }, [offence]);
+  }, [query]);
   return {
     loading,
     result,
