@@ -11,6 +11,7 @@ import {
   Link
 } from "react-router-dom";
 import "./styles.css";
+import preval from "preval.macro";
 
 function NotFound() {
   document.title = "404 - Page not Found";
@@ -113,8 +114,9 @@ function App() {
       <Routing />
       <div className="footer">
         <p>
-          {process.env.REACT_APP_NAME}-{process.env.REACT_APP_VERSION}(Built:{" "}
-          {process.env.REACT_APP_BUILD_TIME}) (Daniel Johns - n9961119)
+          {process.env.REACT_APP_NAME}-{process.env.REACT_APP_VERSION}(Built:
+          {preval`module.exports = new Date().toLocaleString();`}.) (Daniel
+          Johns - n9961119)
         </p>
       </div>
     </div>
