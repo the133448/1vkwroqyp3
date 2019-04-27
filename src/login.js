@@ -8,6 +8,7 @@ export function AuthPage(props) {
     <LoginPage
       prefill={login}
       expired={props.location.hash === "#expire" ? true : false}
+      logout={props.location.hash === "#logout" ? true : false}
     />
   ) : (
     <RegisterPage onSubmit={setLogin} />
@@ -27,6 +28,7 @@ function LoginPage(props) {
       prefill={props.prefill}
       onSubmit={setloginData}
       expired={props.expired}
+      logout={props.logout}
     />
   );
 }
@@ -91,6 +93,14 @@ function FormPage(props) {
             <strong>Session Timeout!</strong>
             <br />
             Your session has expired. Please relogin
+            {props.error}
+          </div>
+        ) : null}
+        {props.logout ? (
+          <div className="alert success">
+            <strong>Logout Success!</strong>
+            <br />
+            You have now logged out
             {props.error}
           </div>
         ) : null}

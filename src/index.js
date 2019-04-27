@@ -24,7 +24,11 @@ function NotFound() {
     </div>
   );
 }
-
+//isLoggedIn Returns
+// 0 - No Login Info Found
+// 1 Logged in (Valid Session)
+// 2 Logged in - Session Expired
+// 3 Logged out (previous login)
 function Routing() {
   return (
     <Router>
@@ -32,41 +36,63 @@ function Routing() {
         <Route
           exact
           path="/"
-          render={() =>
-            isLoggedIn() ? (
-              <Redirect to="/dashboard" />
-            ) : (
-              <Redirect to="/login" />
-            )
-          }
+          render={() => {
+            switch (isLoggedIn()) {
+              case 0:
+              default:
+                return <Redirect to="/login" />;
+              case 1:
+                return <Redirect to="/dashboard" />;
+              case 2:
+                return <Redirect to="/login#expire" />;
+            }
+          }}
         />
         <Route
           path="/login"
-          render={props =>
-            isLoggedIn() ? (
-              <Redirect to="/dashboard" />
-            ) : (
-              <AuthPage login={true} {...props} />
-            )
-          }
+          render={props => {
+            switch (isLoggedIn()) {
+              case 0:
+              case 2:
+              case 3:
+              default:
+                return <AuthPage login={true} {...props} />;
+              case 1:
+                return <Redirect to="/dashboard" />;
+            }
+          }}
         />
         <Route
           path="/register"
-          render={() =>
-            isLoggedIn() ? (
-              <Redirect to="/dashboard" />
-            ) : (
-              <AuthPage login={false} />
-            )
-          }
+          render={props => {
+            switch (isLoggedIn()) {
+              case 0:
+              case 2:
+              case 3:
+              default:
+                return <AuthPage login={false} {...props} />;
+              case 1:
+                return <Redirect to="/dashboard" />;
+            }
+          }}
         />
         <Route
           path="/dashboard"
-          render={() =>
-            isLoggedIn() ? <DashboardPage /> : <Redirect to="/login" />
-          }
+          render={() => {
+            switch (isLoggedIn()) {
+              case 0:
+              default:
+                return <Redirect to="/login" />;
+              case 1:
+                return <DashboardPage />;
+              case 2:
+                return <Redirect to="/login#expire" />;
+              case 3:
+                return <Redirect to="/login#logout" />;
+            }
+          }}
         />
-        <Route path="/404" component={NotFound} status={404} />
+        <Route path="/404" component={NotFound} />
         <Route render={() => <Redirect to="/404" />} />
       </Switch>
     </Router>

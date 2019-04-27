@@ -58,27 +58,47 @@ function setLogin(key, expires, logon) {
   const exp = new Date().getTime() + expires * 1000;
   localStorage.setItem("EXPIRES_KEY", exp);
   localStorage.setItem("EMAIL", logon.get("email"));
+
   API_KEY = key;
 }
 
 export function logOut() {
+  console.log("logging out...");
   localStorage.clear();
+  localStorage.setItem("LOGOUT", true);
 }
 
-export function isLoggedIn() {
-  if (localStorage.getItem("API_KEY")) {
-    //     100  (current time) >   150 (expires time)
-    if (new Date().getTime() >= localStorage.getItem("EXPIRES_KEY")) {
-      alert("Whoops, your session has expired. Please login again.");
+//isLoggedIn Returns
+// 0 - No Login Info Found
+// 1 Logged in (Valid Session)
+// 2 Logged in - Session Expired
+// 3 Logged out (previous login)
 
-      logOut();
-      return false;
+export function isLoggedIn() {
+  console.log("checking if user is logged in");
+  if (localStorage.getItem("API_KEY")) {
+    console.log("found API KEY");
+    //     100  (current time) >   150 (expires time)
+
+    if (new Date().getTime() >= localStorage.getItem("EXPIRES_KEY")) {
+      console.log("$$$found INVALID API key");
+
+      localStorage.clear();
+      return 2; // Seesion Expired
     }
-    return true;
+    console.log("found VALID API KEY");
+    return 1; // Logged in
+  } else if (localStorage.getItem("LOGOUT")) {
+    console.log("found LOGOUT KEY");
+    //localStorage.removeItem("LOGOUT");
+    return 3; // Just logged out
   }
+  console.log("Didnt find key");
+  return 0; // No Login info found
 }
 
 export function UpdateLogon() {
+  //console.log("updating login");
   API_KEY = localStorage.getItem("API_KEY");
 }
 
