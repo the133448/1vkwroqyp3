@@ -113,8 +113,8 @@ function App() {
       <Routing />
       <div className="footer">
         <p>
-          {process.env.REACT_APP_NAME}-{process.env.REACT_APP_VERSION} (Daniel
-          Johns - n9961119)
+          {process.env.REACT_APP_NAME}-{process.env.REACT_APP_VERSION}(Built:{" "}
+          {process.env.REACT_APP_BUILD_TIME}) (Daniel Johns - n9961119)
         </p>
       </div>
     </div>
