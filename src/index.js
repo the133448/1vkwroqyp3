@@ -37,6 +37,7 @@ function Routing() {
           exact
           path="/"
           render={() => {
+            console.log("Requesting / View");
             switch (isLoggedIn()) {
               case 0:
               default:
@@ -45,12 +46,15 @@ function Routing() {
                 return <Redirect to="/dashboard" />;
               case 2:
                 return <Redirect to="/login#expire" />;
+              case 3:
+                return <Redirect to="/login#logout" />;
             }
           }}
         />
         <Route
           path="/login"
           render={props => {
+            console.log("Requesting /login View");
             switch (isLoggedIn()) {
               case 0:
               case 2:
@@ -65,6 +69,7 @@ function Routing() {
         <Route
           path="/register"
           render={props => {
+            console.log("Requesting /register View");
             switch (isLoggedIn()) {
               case 0:
               case 2:
@@ -79,6 +84,7 @@ function Routing() {
         <Route
           path="/dashboard"
           render={() => {
+            console.log("Requesting /dashboard View");
             switch (isLoggedIn()) {
               case 0:
               default:

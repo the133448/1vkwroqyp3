@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Redirect } from "react-router";
 
 let API_KEY = null;
 const API_PATH = "https://cab230.hackhouse.sh/";
@@ -75,24 +74,24 @@ export function logOut() {
 // 3 Logged out (previous login)
 
 export function isLoggedIn() {
-  console.log("checking if user is logged in");
+  //console.log("checking if user is logged in");
   if (localStorage.getItem("API_KEY")) {
-    console.log("found API KEY");
+    //console.log("found API KEY");
     //     100  (current time) >   150 (expires time)
 
     if (new Date().getTime() >= localStorage.getItem("EXPIRES_KEY")) {
-      console.log("$$$found INVALID API key");
+      //console.log("$$$found INVALID API key");
       localStorage.clear();
       return 2; // Seesion Expired
     }
-    console.log("found VALID API KEY");
+    //console.log("found VALID API KEY");
     return 1; // Logged in
   } else if (localStorage.getItem("LOGOUT")) {
-    console.log("found LOGOUT KEY");
-    //localStorage.removeItem("LOGOUT");
+    //console.log("found LOGOUT KEY");
+    localStorage.removeItem("LOGOUT");
     return 3; // Just logged out
   }
-  console.log("Didnt find key");
+  //console.log("Didnt find key");
   return 0; // No Login info found
 }
 
