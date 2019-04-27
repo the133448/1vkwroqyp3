@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { useList, useSearch, logOut } from "./api";
 import SmartDataTable from "react-smart-data-table";
 import Modal from "react-modal";
@@ -214,7 +214,7 @@ function Results(props) {
   );
 }
 
-export function DashboardPage() {
+export function DashboardPage(props) {
   const [offence, setOffence] = useState("");
   const [filter, setFilter] = useState("");
   document.title = "Dashboard - Home";
@@ -222,15 +222,45 @@ export function DashboardPage() {
     <div>
       <div className="navbar">
         <h4 className="user">Welcome back {localStorage.getItem("EMAIL")}</h4>
+
         <Link to="/">
-          <button className="logout" onClick={logOut}>
+          <button className="nav-btn logout" onClick={logOut}>
             Logout
           </button>
         </Link>
       </div>
-      <h1>
-        Dashboard - {offence} - {filter}
-      </h1>
+      <div className="dashbar">
+        <h1>
+          Dashboard - {offence} - {filter}
+        </h1>
+        <Link to="/dashboard/table">
+          <button
+            className={
+              props.type === 1 ? "dash-btn table active" : "dash-btn table"
+            }
+          >
+            Table
+          </button>
+        </Link>
+        <Link to="/dashboard/graph">
+          <button
+            className={
+              props.type === 2 ? "dash-btn graph active" : "dash-btn graph "
+            }
+          >
+            Graphs
+          </button>
+        </Link>
+        <Link to="/dashboard/map">
+          <button
+            className={
+              props.type === 3 ? "dash-btn map active" : "dash-btn map"
+            }
+          >
+            Maps
+          </button>
+        </Link>
+      </div>
       <Offences onSubmit={setOffence} onFilterSubmit={setFilter} />
       {offence ? <Results offence={offence} filter={filter} /> : ""}
     </div>
