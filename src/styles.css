@@ -204,10 +204,10 @@ th {
 .map:hover {
   background-color: #e22e88;
 }
-.table {
+.b-table {
   background-color: #c51f1f;
 }
-.table:hover {
+.b-table:hover {
   background-color: #b91d1d;
 }
 .OffenceChooser {

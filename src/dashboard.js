@@ -236,7 +236,7 @@ export function DashboardPage(props) {
         <Link to="/dashboard/table">
           <button
             className={
-              props.type === 1 ? "dash-btn table active" : "dash-btn table"
+              props.type === 1 ? "dash-btn table active" : "dash-btn b-table"
             }
           >
             Table
