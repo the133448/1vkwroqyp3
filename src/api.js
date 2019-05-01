@@ -134,13 +134,13 @@ export function useSearch(offence, filter) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [result, setResult] = useState([]);
+  offence = encodeURIComponent(offence);
   let query = `offence=${offence}&${filter}`;
 
   useEffect(() => {
     setLoading(true);
     getSearch(query)
       .then(result => {
-        console.log("result was  ok");
         //setError("Failed to communicate with Login server");
         setResult(result);
         setLoading(false);

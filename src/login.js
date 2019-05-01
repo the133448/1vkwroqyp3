@@ -16,7 +16,7 @@ export function AuthPage(props) {
 }
 
 function LoginPage(props) {
-  document.title = "Login";
+  document.title = "Login | POLICE ADMIN";
   const [loginData, setloginData] = useState(null);
   const { loading, error } = useLogin(loginData, true);
 
@@ -34,7 +34,7 @@ function LoginPage(props) {
 }
 
 function RegisterPage(props) {
-  document.title = "Register";
+  document.title = "Register | POLICE ADMIN";
   const [loginData, setloginData] = useState(null);
   const { loading, error } = useLogin(loginData, false);
   if (error === 111) props.onSubmit(loginData);
