@@ -3,6 +3,8 @@ import { Link, Redirect } from "react-router-dom";
 import { useList, useSearch, logOut } from "./api";
 import SmartDataTable from "react-smart-data-table";
 
+import Select from "react-select";
+
 function MonthFilterItem(props) {
   const months = [
     "January",
@@ -25,12 +27,6 @@ function DataFilterItem(props) {
   const endPoint = `${props.field}s`;
   const { loading, lists, error } = useList(endPoint);
 
-  if (loading)
-    return (
-      <div>
-        <h1>PLease Wait Loading...</h1>
-      </div>
-    );
   if (error)
     return (
       <div>
@@ -38,14 +34,18 @@ function DataFilterItem(props) {
         <h3>{error}</h3>
       </div>
     );
-  return <FilterItem field={props.field} data={lists} />;
+  return <FilterItem field={props.field} data={lists} loading={loading} />;
 }
 
 function FilterItem(props) {
+  const options = props.data.map(function(item, index) {
+    return { value: props.special ? index + 1 : item, label: item };
+  });
   return (
     <div className="filter">
-      <h3 className="capital">{props.field} Choice</h3>
-      {props.data.map((item, index) => (
+      <h3 className="capital">{props.field}s </h3>
+      <Select isMulti isLoading={props.loading} options={options} />
+      {/* {props.data.map((item, index) => (
         <Fragment key={item}>
           <label>
             <input
@@ -57,7 +57,7 @@ function FilterItem(props) {
             {item}
           </label>
         </Fragment>
-      ))}
+      ))} */}
     </div>
   );
 }
@@ -76,13 +76,13 @@ function Offences(props) {
   const [modalOpen, setModalOpen] = useState(false);
   if (error)
     return (
-      <div className="content">
+      <div>
         <h1>Oops an Error Ocurred</h1>
       </div>
     );
   if (loading)
     return (
-      <div className="content">
+      <div>
         <h1>PLease Wait Loading...</h1>
       </div>
     );
@@ -91,9 +91,6 @@ function Offences(props) {
     props.onFilterSubmit(filter);
     props.onSubmit(chosenOffence);
   };
-  const handleFilterModal = open => {
-    setModalOpen(open ? true : false);
-  };
   function handleFilterSubmit(event) {
     event.preventDefault();
     const data = new URLSearchParams(new FormData(event.target));
@@ -101,26 +98,18 @@ function Offences(props) {
   }
 
   return (
-    <div className="OffenceChooser content">
-      <div className="select">
-        <select
-          id="chosenOffence"
-          name="chosenOffence"
-          value={chosenOffence}
-          onChange={event => {
-            setChosenOffence(event.target.value);
-          }}
-        >
-          <option value="" disabled hidden>
-            Please Choose...
-          </option>
-          {lists.map((offence, index) => (
-            <option value={offence} key={index}>
-              {offence}
-            </option>
-          ))}
-        </select>
+    <div className="OffenceChooser">
+      <div className="modal-container">
+        <h1>Search Offences {filter}</h1>
+        <form onSubmit={handleFilterSubmit}>
+          <DataFilterItem field="offence" />
+          <DataFilterItem field="age" />
+          <DataFilterItem field="gender" />
+          <DataFilterItem field="year" />
+          <MonthFilterItem field="month" special={true} />
+        </form>
       </div>
+
       <button
         className="searchBtn"
         id="search-button"
@@ -128,21 +117,10 @@ function Offences(props) {
         disabled={chosenOffence ? false : true}
         onClick={() => handleSubmit()}
       >
-        {chosenOffence ? `Search for ${chosenOffence}` : "Choose an offence"}
+        {chosenOffence
+          ? `Search for ${chosenOffence}`
+          : "An offence is required"}
       </button>
-
-      <button onClick={() => handleFilterModal(true)}>Filter</button>
-      <div className="modal-container">
-        <button onClick={() => handleFilterModal(false)}>close</button>
-        <h1>Filter Select {filter}</h1>
-        <form onSubmit={handleFilterSubmit}>
-          <DataFilterItem field="age" />
-          <DataFilterItem field="gender" />
-          <DataFilterItem field="year" />
-          <MonthFilterItem field="month" special={true} />
-          <button type="submit">Update</button>
-        </form>
-      </div>
     </div>
   );
 }
@@ -209,60 +187,79 @@ function Results(props) {
 
 function SideBar(props) {
   return (
-    <aside className="main-sidebar">
-      <div class="sidebar">
-        <Link to="/dashboard/table">
-          <button
-            className={
-              props.type === 1 ? "dash-btn table active" : "dash-btn b-table"
-            }
-          >
-            Search
-          </button>
-        </Link>
-        <Link to="/dashboard/graph">
-          <button
-            className={
-              props.type === 2 ? "dash-btn graph active" : "dash-btn graph "
-            }
-          >
-            Graphs
-          </button>
-        </Link>
-        <Link to="/dashboard/map">
-          <button
-            className={
-              props.type === 3 ? "dash-btn map active" : "dash-btn map"
-            }
-          >
-            Maps
-          </button>
-        </Link>
-      </div>
+    <aside className="sidebar">
+      <Link to="/dashboard/table">
+        <button
+          className={
+            props.type === 1 ? "dash-btn table active" : "dash-btn b-table"
+          }
+        >
+          Search
+        </button>
+      </Link>
+      <Link to="/dashboard/graph">
+        <button className={props.type === 2 ? "dash-btn active" : "dash-btn"}>
+          Graphs
+        </button>
+      </Link>
+      <Link to="/dashboard/map">
+        <button className={props.type === 3 ? "dash-btn active" : "dash-btn"}>
+          Maps
+        </button>
+      </Link>
     </aside>
   );
+}
+
+function CurrentView(props) {
+  if (props.type === 1) {
+    return (
+      <div>
+        <Offences
+          onSubmit={props.setOffence}
+          onFilterSubmit={props.setFilter}
+        />
+        {props.offence ? (
+          <Results offence={props.offence} filter={props.filter} />
+        ) : (
+          ""
+        )}
+      </div>
+    );
+  } else if (props.type === 2) {
+    return (
+      <div>
+        <h1>Graphs</h1>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <h1>Maps</h1>
+      </div>
+    );
+  }
 }
 
 export function DashboardPage(props) {
   const [offence, setOffence] = useState("");
   const [filter, setFilter] = useState("");
+
   document.title = "Dashboard - Home";
   return (
     <div className="animated fadeIn padded">
       <div className="navbar">
         <h4 className="user">Welcome back {localStorage.getItem("EMAIL")}</h4>
 
-        <Link to="/">
-          <button className="nav-btn logout" onClick={logOut}>
-            Logout
-          </button>
+        <Link to="/logout" className="logout">
+          Logout{" "}
         </Link>
       </div>
       <div>
-        <SideBar />
-
-        <Offences onSubmit={setOffence} onFilterSubmit={setFilter} />
-        {offence ? <Results offence={offence} filter={filter} /> : ""}
+        <SideBar type={props.type} />
+        <div className="content">
+          <CurrentView type={props.type} />
+        </div>
       </div>
     </div>
   );

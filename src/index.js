@@ -12,7 +12,7 @@ import {
 
 import { AuthPage } from "./login";
 import { DashboardPage } from "./dashboard";
-import { isLoggedIn, UpdateLogon } from "./api";
+import { isLoggedIn, UpdateLogon, logOut } from "./api";
 import "./styles.css";
 
 function NotFound() {
@@ -49,8 +49,6 @@ function Routing() {
                 return <Redirect to="/dashboard" />;
               case 2:
                 return <Redirect to="/login#expire" />;
-              case 3:
-                return <Redirect to="/login#logout" />;
             }
           }}
         />
@@ -85,6 +83,14 @@ function Routing() {
           }}
         />
         <Route
+          path="/logout"
+          render={props => {
+            console.log("Requesting /logout View");
+            logOut();
+            return <Redirect to="/login#logout" />;
+          }}
+        />
+        <Route
           exact
           path="/dashboard"
           render={() => {
@@ -97,8 +103,6 @@ function Routing() {
                 return <Redirect to="/dashboard/table" />;
               case 2:
                 return <Redirect to="/login#expire" />;
-              case 3:
-                return <Redirect to="/login#logout" />;
             }
           }}
         />
@@ -114,8 +118,6 @@ function Routing() {
                 return <DashboardPage type={1} />;
               case 2:
                 return <Redirect to="/login#expire" />;
-              case 3:
-                return <Redirect to="/login#logout" />;
             }
           }}
         />
@@ -131,8 +133,6 @@ function Routing() {
                 return <DashboardPage type={2} />;
               case 2:
                 return <Redirect to="/login#expire" />;
-              case 3:
-                return <Redirect to="/login#logout" />;
             }
           }}
         />
@@ -148,8 +148,6 @@ function Routing() {
                 return <DashboardPage type={3} />;
               case 2:
                 return <Redirect to="/login#expire" />;
-              case 3:
-                return <Redirect to="/login#logout" />;
             }
           }}
         />

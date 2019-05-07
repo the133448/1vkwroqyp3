@@ -62,16 +62,13 @@ function setLogin(key, expires, logon) {
 }
 
 export function logOut() {
-  console.log("logging out...");
   localStorage.clear();
-  localStorage.setItem("LOGOUT", true);
 }
 
 //isLoggedIn Returns
 // 0 - No Login Info Found
 // 1 Logged in (Valid Session)
 // 2 Logged in - Session Expired
-// 3 Logged out (previous login)
 
 export function isLoggedIn() {
   //console.log("checking if user is logged in");
@@ -86,10 +83,6 @@ export function isLoggedIn() {
     }
     //console.log("found VALID API KEY");
     return 1; // Logged in
-  } else if (localStorage.getItem("LOGOUT")) {
-    //console.log("found LOGOUT KEY");
-    localStorage.removeItem("LOGOUT");
-    return 3; // Just logged out
   }
   //console.log("Didnt find key");
   return 0; // No Login info found
