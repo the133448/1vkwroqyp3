@@ -2,7 +2,6 @@ import React, { Fragment, useState } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { useList, useSearch, logOut } from "./api";
 import SmartDataTable from "react-smart-data-table";
-import Modal from "react-modal";
 
 function MonthFilterItem(props) {
   const months = [
@@ -77,13 +76,13 @@ function Offences(props) {
   const [modalOpen, setModalOpen] = useState(false);
   if (error)
     return (
-      <div>
+      <div className="content">
         <h1>Oops an Error Ocurred</h1>
       </div>
     );
   if (loading)
     return (
-      <div>
+      <div className="content">
         <h1>PLease Wait Loading...</h1>
       </div>
     );
@@ -102,7 +101,7 @@ function Offences(props) {
   }
 
   return (
-    <div className="OffenceChooser">
+    <div className="OffenceChooser content">
       <div className="select">
         <select
           id="chosenOffence"
@@ -134,21 +133,15 @@ function Offences(props) {
 
       <button onClick={() => handleFilterModal(true)}>Filter</button>
       <div className="modal-container">
-        <Modal
-          isOpen={modalOpen}
-          contentLabel="Filter results"
-          appElement={document.getElementById("root")}
-        >
-          <button onClick={() => handleFilterModal(false)}>close</button>
-          <h1>Filter Select {filter}</h1>
-          <form onSubmit={handleFilterSubmit}>
-            <DataFilterItem field="age" />
-            <DataFilterItem field="gender" />
-            <DataFilterItem field="year" />
-            <MonthFilterItem field="month" special={true} />
-            <button type="submit">Update</button>
-          </form>
-        </Modal>
+        <button onClick={() => handleFilterModal(false)}>close</button>
+        <h1>Filter Select {filter}</h1>
+        <form onSubmit={handleFilterSubmit}>
+          <DataFilterItem field="age" />
+          <DataFilterItem field="gender" />
+          <DataFilterItem field="year" />
+          <MonthFilterItem field="month" special={true} />
+          <button type="submit">Update</button>
+        </form>
       </div>
     </div>
   );
@@ -158,19 +151,19 @@ function Results(props) {
   const [search, setSearch] = useState("");
   if (loading)
     return (
-      <div>
+      <div className="content">
         <h4>Loading...</h4>
       </div>
     );
   if (error)
     return (
-      <div>
+      <div className="content">
         <h1>An Error Ocurred</h1>
         <h3>{error.toString()}</h3>
       </div>
     );
   return (
-    <div>
+    <div className="content">
       <h3>
         Results for: {props.offence} ({search})
       </h3>
@@ -214,32 +207,17 @@ function Results(props) {
   );
 }
 
-export function DashboardPage(props) {
-  const [offence, setOffence] = useState("");
-  const [filter, setFilter] = useState("");
-  document.title = "Dashboard - Home";
+function SideBar(props) {
   return (
-    <div>
-      <div className="navbar">
-        <h4 className="user">Welcome back {localStorage.getItem("EMAIL")}</h4>
-
-        <Link to="/">
-          <button className="nav-btn logout" onClick={logOut}>
-            Logout
-          </button>
-        </Link>
-      </div>
-      <div className="dashbar">
-        <h1>
-          Dashboard - {offence} - {filter}
-        </h1>
+    <aside className="main-sidebar">
+      <div class="sidebar">
         <Link to="/dashboard/table">
           <button
             className={
               props.type === 1 ? "dash-btn table active" : "dash-btn b-table"
             }
           >
-            Table
+            Search
           </button>
         </Link>
         <Link to="/dashboard/graph">
@@ -261,8 +239,31 @@ export function DashboardPage(props) {
           </button>
         </Link>
       </div>
-      <Offences onSubmit={setOffence} onFilterSubmit={setFilter} />
-      {offence ? <Results offence={offence} filter={filter} /> : ""}
+    </aside>
+  );
+}
+
+export function DashboardPage(props) {
+  const [offence, setOffence] = useState("");
+  const [filter, setFilter] = useState("");
+  document.title = "Dashboard - Home";
+  return (
+    <div className="animated fadeIn padded">
+      <div className="navbar">
+        <h4 className="user">Welcome back {localStorage.getItem("EMAIL")}</h4>
+
+        <Link to="/">
+          <button className="nav-btn logout" onClick={logOut}>
+            Logout
+          </button>
+        </Link>
+      </div>
+      <div>
+        <SideBar />
+
+        <Offences onSubmit={setOffence} onFilterSubmit={setFilter} />
+        {offence ? <Results offence={offence} filter={filter} /> : ""}
+      </div>
     </div>
   );
 }

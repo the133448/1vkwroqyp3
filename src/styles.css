@@ -6,11 +6,28 @@
 *:focus {
   outline: none;
 }
+
+html {
+  height: 100%;
+}
 body {
-  font-family: Arial;
-  background-color: #3498db;
+  font-family: "Noto Sans", sans-serif;
+  min-height: 85%;
   padding: 50px;
 }
+body::after {
+  content: "";
+  display: block;
+  height: 100px;
+}
+
+body {
+  min-height: 100%;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+
 a {
   text-decoration: none;
 }
@@ -19,14 +36,20 @@ a {
   width: 300px;
 }
 .login-screen {
-  background-color: #fff;
   padding: 20px;
-  border-radius: 5px;
+  background: -webkit-linear-gradient(
+    to right,
+    #516395,
+    #614385
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #516395, #614385);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
 
 .app-title {
+  font-family: "Arial", sans-serif;
   text-align: center;
-  color: #777;
+  color: rgb(255, 255, 255);
 }
 
 .login-form {
@@ -122,11 +145,11 @@ input:focus {
   padding-top: 50px;
 }
 .sign-up-text {
-  color: #777777;
+  color: rgb(202, 126, 118);
   border-bottom: 1px solid #2196f3;
 }
 .su-text {
-  color: #777777;
+  color: rgb(202, 126, 118);
 }
 .logo {
   width: 25%;
@@ -134,7 +157,6 @@ input:focus {
 }
 
 table {
-  font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 100%;
   background: #ffffff;
@@ -146,10 +168,61 @@ th {
   padding: 8px;
 }
 
+.sidebar {
+  margin: 0;
+  padding: 0;
+  width: 150px;
+  background-color: #f1f1f1;
+  position: absolute;
+  overflow: auto;
+}
+
+.sidebar a {
+  display: block;
+  color: black;
+  padding: 16px;
+  text-decoration: none;
+}
+
+.sidebar a.active {
+  background-color: #4caf50;
+  color: white;
+}
+
+.sidebar a:hover:not(.active) {
+  background-color: #555;
+  color: white;
+}
+@media screen and (max-width: 900px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .sidebar a {
+    float: left;
+  }
+  div.content {
+    margin-left: 0;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .sidebar a {
+    text-align: center;
+    float: none;
+  }
+}
+
+div.content {
+  margin-left: 200px;
+  padding: 1px 16px;
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;
-  background-color: #2aaf25;
+  background-color: #dd4b39;
   width: 100%;
   min-height: 50px;
   margin-bottom: 20px;
@@ -173,6 +246,7 @@ th {
 }
 .dash-btn {
   color: #fff;
+  width: 100px;
 
   padding: 10px 15px;
   border-radius: 3px;
@@ -211,11 +285,8 @@ th {
   background-color: #b91d1d;
 }
 .OffenceChooser {
-  display: flex;
-  flex-wrap: wrap;
-  text-align: center;
-  justify-content: center;
 }
+
 select {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -299,25 +370,15 @@ select::-ms-expand {
 .capital {
   text-transform: capitalize;
 }
-html {
-  height: 100%;
-}
-body {
-  min-height: 100%;
-  position: relative;
-  padding-bottom: [footer-height];
-}
-.footer {
-  text-align: center;
+footer {
   position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
   left: 0;
   right: 0;
-  bottom: 0;
-  height: [footer-height];
-}
-.dashbar {
-  display: flex;
-  justify-content: left;
+  color: #444;
+  border-top: 1px solid #d2d6de;
 }
 
 .active {
@@ -329,4 +390,7 @@ body {
   background-color: #dbd2d2;
   color: #777a7c;
   box-shadow: none;
+}
+.padded {
+  padding: 50px;
 }

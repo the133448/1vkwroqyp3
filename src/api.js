@@ -80,7 +80,7 @@ export function isLoggedIn() {
     //     100  (current time) >   150 (expires time)
 
     if (new Date().getTime() >= localStorage.getItem("EXPIRES_KEY")) {
-      //console.log("$$$found INVALID API key");
+      console.log("$$$found INVALID API key");
       localStorage.clear();
       return 2; // Seesion Expired
     }
