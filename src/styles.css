@@ -182,7 +182,10 @@ th {
   padding: 16px;
   text-decoration: none;
 }
-
+div.content {
+  margin-left: 200px;
+  padding: 1px 16px;
+}
 @media screen and (max-width: 900px) {
   .sidebar {
     width: 100%;
@@ -195,6 +198,10 @@ th {
   div.content {
     margin-left: 0;
   }
+  div.content {
+    margin-left: 0px;
+    padding: 1px 16px;
+  }
 }
 
 @media screen and (max-width: 400px) {
@@ -202,11 +209,10 @@ th {
     text-align: center;
     float: none;
   }
-}
-
-div.content {
-  margin-left: 200px;
-  padding: 1px 16px;
+  div.content {
+    margin-left: 0px;
+    padding: 1px 16px;
+  }
 }
 
 .navbar {
@@ -358,4 +364,54 @@ footer {
 
 .padded {
   padding: 50px;
+}
+
+.filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+.filter-container > .filter {
+  flex-grow: 1;
+  flex: 1 1 30%;
+  height: 100px;
+}
+.filter {
+  padding: 10px;
+}
+@media (max-width: 900px) {
+  .filter-container {
+    display: block;
+  }
+}
+
+.animated {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.fadeIn {
+  -webkit-animation-name: fadeIn;
+  animation-name: fadeIn;
 }

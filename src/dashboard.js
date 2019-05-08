@@ -6,6 +6,8 @@ import SmartDataTable from "react-smart-data-table";
 import Select from "react-select";
 
 function MonthFilterItem(props) {
+  const [filter, setFilter] = useState();
+  console.log("filter:", filter);
   const months = [
     "January",
     "February",
@@ -20,13 +22,19 @@ function MonthFilterItem(props) {
     "November",
     "December"
   ];
-  return <FilterItem field={props.field} data={months} special={true} />;
+  return (
+    <FilterItem
+      field={props.field}
+      data={months}
+      special={true}
+      sendFilter={setFilter}
+    />
+  );
 }
 
 function DataFilterItem(props) {
   const endPoint = `${props.field}s`;
   const { loading, lists, error } = useList(endPoint);
-
   if (error)
     return (
       <div>
@@ -34,17 +42,37 @@ function DataFilterItem(props) {
         <h3>{error}</h3>
       </div>
     );
-  return <FilterItem field={props.field} data={lists} loading={loading} />;
+  return (
+    <FilterItem
+      field={props.field}
+      data={lists}
+      loading={loading}
+      sendFilter={props.updateFilter}
+    />
+  );
 }
 
 function FilterItem(props) {
+  const handleChange = selectedOption => {
+    props.sendFilter({ field: props.field, selectedOption });
+    //setFilter({ field: props.field, selectedOption });
+  };
+  //console.log(filter);
+
   const options = props.data.map(function(item, index) {
     return { value: props.special ? index + 1 : item, label: item };
   });
   return (
     <div className="filter">
       <h3 className="capital">{props.field}s </h3>
-      <Select isMulti isLoading={props.loading} options={options} />
+      <Select
+        id={props.field}
+        isMulti
+        onChange={handleChange}
+        isLoading={props.loading}
+        placeholder={"Choose " + props.field + "s"}
+        options={options}
+      />
       {/* {props.data.map((item, index) => (
         <Fragment key={item}>
           <label>
@@ -63,7 +91,6 @@ function FilterItem(props) {
 }
 
 function Offences(props) {
-  const { loading, lists, error } = useList("offences");
   const [filter, setFilter] = useState("");
   // const ages = useList("ages");
   // const genders = useList("genders");
@@ -74,40 +101,23 @@ function Offences(props) {
   // const { loadingY, years, errorY } = useList("years");
   const [chosenOffence, setChosenOffence] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-  if (error)
-    return (
-      <div>
-        <h1>Oops an Error Ocurred</h1>
-      </div>
-    );
-  if (loading)
-    return (
-      <div>
-        <h1>PLease Wait Loading...</h1>
-      </div>
-    );
-
+  console.log("filter:", chosenOffence);
   const handleSubmit = () => {
     props.onFilterSubmit(filter);
     props.onSubmit(chosenOffence);
   };
-  function handleFilterSubmit(event) {
-    event.preventDefault();
-    const data = new URLSearchParams(new FormData(event.target));
-    setFilter(data.toString());
-  }
 
   return (
     <div className="OffenceChooser">
       <div className="modal-container">
         <h1>Search Offences {filter}</h1>
-        <form onSubmit={handleFilterSubmit}>
-          <DataFilterItem field="offence" />
+        <div className="filter-container">
+          <DataFilterItem field="offence" updateFilter={setChosenOffence} />
           <DataFilterItem field="age" />
           <DataFilterItem field="gender" />
           <DataFilterItem field="year" />
           <MonthFilterItem field="month" special={true} />
-        </form>
+        </div>
       </div>
 
       <button
