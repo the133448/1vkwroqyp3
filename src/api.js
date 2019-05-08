@@ -123,15 +123,18 @@ function getList(list) {
   return fetch(endPoint).then(res => res.json());
 }
 
-export function useSearch(offence, filter) {
+export function useSearch(params) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [result, setResult] = useState([]);
-  offence = encodeURIComponent(offence);
-  let query = `offence=${offence}&${filter}`;
 
   useEffect(() => {
     setLoading(true);
+    const esc = encodeURIComponent;
+    const query = Object.keys(params)
+      .map(k => esc(k) + "=" + esc(params[k]))
+      .join("&");
+    console.log(query);
     getSearch(query)
       .then(result => {
         //setError("Failed to communicate with Login server");
@@ -144,7 +147,7 @@ export function useSearch(offence, filter) {
           setError("Unable to communicate with API Server");
         else setError(JSON.parse(resError.message).error);
       });
-  }, [query]);
+  }, [params]);
   return {
     loading,
     result,

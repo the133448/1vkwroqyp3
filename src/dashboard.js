@@ -7,7 +7,6 @@ import Select from "react-select";
 
 function MonthFilterItem(props) {
   const [filter, setFilter] = useState();
-  console.log("filter:", filter);
   const months = [
     "January",
     "February",
@@ -27,7 +26,7 @@ function MonthFilterItem(props) {
       field={props.field}
       data={months}
       special={true}
-      sendFilter={setFilter}
+      sendFilter={props.updateFilter}
     />
   );
 }
@@ -54,10 +53,17 @@ function DataFilterItem(props) {
 
 function FilterItem(props) {
   const handleChange = selectedOption => {
-    props.sendFilter({ field: props.field, selectedOption });
-    //setFilter({ field: props.field, selectedOption });
+    let data = null;
+    if (!(selectedOption.length === undefined)) {
+      data = selectedOption.map(function(item) {
+        return item.value;
+      });
+    } else {
+      data = [selectedOption.value];
+    }
+
+    props.sendFilter(data);
   };
-  //console.log(filter);
 
   const options = props.data.map(function(item, index) {
     return { value: props.special ? index + 1 : item, label: item };
@@ -65,98 +71,97 @@ function FilterItem(props) {
   return (
     <div className="filter">
       <h3 className="capital">{props.field}s </h3>
-      <Select
-        id={props.field}
-        isMulti
-        onChange={handleChange}
-        isLoading={props.loading}
-        placeholder={"Choose " + props.field + "s"}
-        options={options}
-      />
-      {/* {props.data.map((item, index) => (
-        <Fragment key={item}>
-          <label>
-            <input
-              className="option"
-              type="radio"
-              name={props.field}
-              value={props.special ? index + 1 : item}
-            />
-            {item}
-          </label>
-        </Fragment>
-      ))} */}
+      {props.field === "offence" ? (
+        <Select
+          id={props.field}
+          onChange={handleChange}
+          isLoading={props.loading}
+          placeholder={"Choose offence (required)"}
+          options={options}
+        />
+      ) : (
+        <Select
+          id={props.field}
+          isMulti
+          onChange={handleChange}
+          isLoading={props.loading}
+          placeholder={"Choose " + props.field + "s"}
+          options={options}
+        />
+      )}
     </div>
   );
 }
 
 function Offences(props) {
-  const [filter, setFilter] = useState("");
-  // const ages = useList("ages");
-  // const genders = useList("genders");
-  // const years = useList("years");
+  const [offence, setOffence] = useState([]);
+  const [age, setAge] = useState([]);
+  const [gender, setGender] = useState([]);
+  const [year, setYear] = useState([]);
+  const [month, setMonth] = useState([]);
 
-  // const { loadingA, ages, errorA } = useList("ages");
-  // const { loadingg, genders, errorG } = useList("genders");
-  // const { loadingY, years, errorY } = useList("years");
-  const [chosenOffence, setChosenOffence] = useState("");
-  const [modalOpen, setModalOpen] = useState(false);
-  console.log("filter:", chosenOffence);
+  let offenceValidate = false;
+  if (offence.length >= 1) {
+    offenceValidate = true;
+  }
+
+  const filters = {
+    offence,
+    age,
+    gender,
+    year,
+    month
+  };
+
   const handleSubmit = () => {
-    props.onFilterSubmit(filter);
-    props.onSubmit(chosenOffence);
+    props.onSubmit(filters);
   };
 
   return (
     <div className="OffenceChooser">
       <div className="modal-container">
-        <h1>Search Offences {filter}</h1>
+        <h1>Search Offences </h1>
         <div className="filter-container">
-          <DataFilterItem field="offence" updateFilter={setChosenOffence} />
-          <DataFilterItem field="age" />
-          <DataFilterItem field="gender" />
-          <DataFilterItem field="year" />
-          <MonthFilterItem field="month" special={true} />
+          <DataFilterItem field="offence" updateFilter={setOffence} />
+          <DataFilterItem field="age" updateFilter={setAge} />
+          <DataFilterItem field="gender" updateFilter={setGender} />
+          <DataFilterItem field="year" updateFilter={setYear} />
+          <MonthFilterItem field="month" updateFilter={setMonth} />
+          <button
+            className="searchBtn"
+            id="search-button"
+            type="button"
+            disabled={offenceValidate ? false : true}
+            onClick={() => handleSubmit()}
+          >
+            {offenceValidate ? `Search` : "An offence is required"}
+          </button>
         </div>
       </div>
-
-      <button
-        className="searchBtn"
-        id="search-button"
-        type="button"
-        disabled={chosenOffence ? false : true}
-        onClick={() => handleSubmit()}
-      >
-        {chosenOffence
-          ? `Search for ${chosenOffence}`
-          : "An offence is required"}
-      </button>
     </div>
   );
 }
 function Results(props) {
-  const { loading, result, error } = useSearch(props.offence, props.filter);
+  const { loading, result, error } = useSearch(props.filters);
   const [search, setSearch] = useState("");
   if (loading)
     return (
-      <div className="content">
+      <div>
         <h4>Loading...</h4>
       </div>
     );
   if (error)
     return (
-      <div className="content">
+      <div>
         <h1>An Error Ocurred</h1>
         <h3>{error.toString()}</h3>
       </div>
     );
   return (
-    <div className="content">
-      <h3>
-        Results for: {props.offence} ({search})
-      </h3>
+    <div>
+      <h3>Results for: {props.filters.offence[0]}</h3>
       <div>
-        <label>Search: </label>
+        <label>Search for a local government </label>
         <input
           value={search}
           onChange={event => {
@@ -164,24 +169,6 @@ function Results(props) {
           }}
         />
       </div>
-      {/* <table>
-        <thead>
-          <tr>
-            <th>Local Government</th>
-            <th>Number of offences</th>
-          </tr>
-        </thead>
-        <tbody>
-          {result.map(result => (
-            <Fragment>
-              <tr>
-                <td>{result.lga}</td>
-                <td>{result.count}</td>
-              </tr>
-            </Fragment>
-          ))}
-        </tbody>
-      </table> */}
 
       <SmartDataTable
         data={result}
@@ -222,18 +209,12 @@ function SideBar(props) {
 }
 
 function CurrentView(props) {
+  const [filters, setFilter] = useState("");
   if (props.type === 1) {
     return (
       <div>
-        <Offences
-          onSubmit={props.setOffence}
-          onFilterSubmit={props.setFilter}
-        />
-        {props.offence ? (
-          <Results offence={props.offence} filter={props.filter} />
-        ) : (
-          ""
-        )}
+        <Offences onSubmit={setFilter} />
+        {filters ? <Results filters={filters} /> : ""}
       </div>
     );
   } else if (props.type === 2) {
@@ -252,9 +233,6 @@ function CurrentView(props) {
 }
 
 export function DashboardPage(props) {
-  const [offence, setOffence] = useState("");
-  const [filter, setFilter] = useState("");
-
   document.title = "Dashboard - Home";
   return (
     <div className="animated fadeIn padded">
