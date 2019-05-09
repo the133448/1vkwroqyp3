@@ -175,8 +175,8 @@ function getSearch(offence) {
     .then(res => res.result)
     .then(result =>
       result.map(item => ({
-        lga: item.LGA,
-        count: item.total
+        "Local Government": item.LGA,
+        Count: item.total
       }))
     );
 }

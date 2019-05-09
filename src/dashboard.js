@@ -26,6 +26,7 @@ function MonthFilterItem(props) {
       field={props.field}
       data={months}
       special={true}
+      disabled={props.disabled}
       sendFilter={props.updateFilter}
     />
   );
@@ -46,6 +47,7 @@ function DataFilterItem(props) {
       field={props.field}
       data={lists}
       loading={loading}
+      disabled={props.disabled}
       sendFilter={props.updateFilter}
     />
   );
@@ -87,6 +89,7 @@ function FilterItem(props) {
           isLoading={props.loading}
           placeholder={"Choose " + props.field + "s"}
           options={options}
+          isDisabled={props.disabled}
         />
       )}
     </div>
@@ -123,10 +126,26 @@ function Offences(props) {
         <h1>Search Offences </h1>
         <div className="filter-container">
           <DataFilterItem field="offence" updateFilter={setOffence} />
-          <DataFilterItem field="age" updateFilter={setAge} />
-          <DataFilterItem field="gender" updateFilter={setGender} />
-          <DataFilterItem field="year" updateFilter={setYear} />
-          <MonthFilterItem field="month" updateFilter={setMonth} />
+          <DataFilterItem
+            field="age"
+            updateFilter={setAge}
+            disabled={offenceValidate ? false : true}
+          />
+          <DataFilterItem
+            field="gender"
+            updateFilter={setGender}
+            disabled={offenceValidate ? false : true}
+          />
+          <DataFilterItem
+            field="year"
+            updateFilter={setYear}
+            disabled={offenceValidate ? false : true}
+          />
+          <MonthFilterItem
+            field="month"
+            updateFilter={setMonth}
+            disabled={offenceValidate ? false : true}
+          />
           <button
             className="searchBtn"
             id="search-button"
@@ -161,7 +180,7 @@ function Results(props) {
     <div>
       <h3>Results for: {props.filters.offence[0]}</h3>
       <div>
-        <label>Search for a local government </label>
+        <label>Find a local government </label>
         <input
           value={search}
           onChange={event => {
