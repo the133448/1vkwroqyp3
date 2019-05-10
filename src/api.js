@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 
 let API_KEY = null;
-const API_PATH = "https://cab230.hackhouse.sh/";
+let API_PATH = null;
+
+if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
+  API_PATH = "https://cab230.hackhouse.sh/";
+} else {
+  API_PATH = "/api/";
+}
 
 export function useLogin(data, type) {
   const [loading, setLoading] = useState(false);
