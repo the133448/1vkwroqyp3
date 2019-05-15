@@ -11,7 +11,7 @@ import {
 } from "react-router-dom";
 
 import { AuthPage } from "./login";
-import { DashboardPage } from "./dashboard";
+import { DashboardRoutes } from "./dashboard/dashboard";
 import { isLoggedIn, UpdateLogon, logOut } from "./api";
 import "./styles.css";
 
@@ -90,67 +90,7 @@ function Routing() {
             return <Redirect to="/login#logout" />;
           }}
         />
-        <Route
-          exact
-          path="/dashboard"
-          render={() => {
-            console.log("Requesting /dashboard View");
-            switch (isLoggedIn()) {
-              case 0:
-              default:
-                return <Redirect to="/login" />;
-              case 1:
-                return <Redirect to="/dashboard/table" />;
-              case 2:
-                return <Redirect to="/login#expire" />;
-            }
-          }}
-        />
-        <Route
-          path="/dashboard/table"
-          render={() => {
-            console.log("Requesting /dashboard/table View");
-            switch (isLoggedIn()) {
-              case 0:
-              default:
-                return <Redirect to="/login" />;
-              case 1:
-                return <DashboardPage type={1} />;
-              case 2:
-                return <Redirect to="/login#expire" />;
-            }
-          }}
-        />
-        <Route
-          path="/dashboard/graph"
-          render={() => {
-            console.log("Requesting /dashboard/graph View");
-            switch (isLoggedIn()) {
-              case 0:
-              default:
-                return <Redirect to="/login" />;
-              case 1:
-                return <DashboardPage type={2} />;
-              case 2:
-                return <Redirect to="/login#expire" />;
-            }
-          }}
-        />
-        <Route
-          path="/dashboard/map"
-          render={() => {
-            console.log("Requesting /dashboard/map View");
-            switch (isLoggedIn()) {
-              case 0:
-              default:
-                return <Redirect to="/login" />;
-              case 1:
-                return <DashboardPage type={3} />;
-              case 2:
-                return <Redirect to="/login#expire" />;
-            }
-          }}
-        />
+        <DashboardRoutes />
         <Route path="/404" component={NotFound} />
         <Route render={() => <Redirect to="/404" />} />
       </Switch>

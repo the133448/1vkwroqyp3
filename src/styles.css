@@ -9,6 +9,7 @@
 
 html {
   height: 100%;
+  scroll-behavior: smooth;
 }
 body {
   font-family: "Noto Sans", sans-serif;
@@ -369,6 +370,7 @@ footer {
   right: 0;
   color: #444;
   border-top: 1px solid #d2d6de;
+  z-index: -1;
 }
 
 .padded {
