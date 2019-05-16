@@ -5,12 +5,14 @@
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
+    "d3": "5.9.2",
     "preval.macro": "3.0.0",
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "react-router-dom": "5.0.0",
     "react-scripts": "2.1.8",
     "react-select": "2.4.3",
+    "react-simple-maps": "0.12.1",
     "react-smart-data-table": "0.7.0",
     "react-transition-group": "4.0.0"
   },
@@ -23,5 +25,10 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "browserslist": [">0.2%", "not dead", "not ie <= 11", "not op_mini all"]
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

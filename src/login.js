@@ -77,7 +77,6 @@ function FormPage(props) {
           <div className="alert error">
             <strong>Error!</strong>
             <br />
-
             {props.error}
           </div>
         ) : null}
@@ -93,7 +92,6 @@ function FormPage(props) {
             <strong>Session Timeout!</strong>
             <br />
             Your session has expired. Please relogin
-            {props.error}
           </div>
         ) : null}
         {props.logout ? (
@@ -101,7 +99,6 @@ function FormPage(props) {
             <strong>Logout Success!</strong>
             <br />
             You have now logged out
-            {props.error}
           </div>
         ) : null}
         <form onSubmit={submitEvent}>

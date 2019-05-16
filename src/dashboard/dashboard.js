@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link, Redirect, Route } from "react-router-dom";
 import { isLoggedIn } from "../api";
 
 import { SearchPage } from "./search";
+import { GraphPage } from "./graph";
+import { MapPage } from "./map";
 
 function SideBar(props) {
   return (
@@ -34,17 +36,9 @@ export function CurrentView(props) {
   if (props.type === 1) {
     return <SearchPage />;
   } else if (props.type === 2) {
-    return (
-      <div>
-        <h1>Graphs</h1>
-      </div>
-    );
+    return <GraphPage />;
   } else {
-    return (
-      <div>
-        <h1>Maps</h1>
-      </div>
-    );
+    return <MapPage />;
   }
 }
 
