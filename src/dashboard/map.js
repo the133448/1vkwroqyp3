@@ -220,13 +220,13 @@ function Results(props) {
         projectionConfig={{
           scale: 205
         }}
-        height={1000}
+        height={1500}
         style={{
           width: "100%",
           height: "auto"
         }}
       >
-        <ZoomableGroup center={[146, -23]} zoom={18}>
+        <ZoomableGroup center={[146, -23]} zoom={18} disablePanning>
           <Geographies geography="/maps/qld.json">
             {(geographies, projection) =>
               geographies.map((geography, i) => {
