@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { useList, useSearch, logOut } from "../api";
 import { scaleLinear } from "d3-scale";
+import ReactTooltip from "react-tooltip";
 
 import {
   ComposableMap,
@@ -175,16 +176,23 @@ const wrapperStyles = {
 
 function Results(props) {
   const { loading, result, error } = useSearch(props.filters);
-  // let resultsRef = useRef();
-  // useEffect(() => {
-  //   if (resultsRef.current) {
-  //     window.scrollTo({
-  //       behavior: "smooth",
-  //       top: resultsRef.current.offsetTop
-  //     });
-  //   }
-  // }, [loading]);
-
+  let resultsRef = useRef();
+  useEffect(
+    // the effect
+    () => {
+      if (resultsRef.current) {
+        window.scrollTo({
+          behavior: "smooth",
+          top: resultsRef.current.offsetTop
+        });
+      }
+      setTimeout(() => {
+        console.log("Rebuilding");
+        ReactTooltip.rebuild(); // pretend we're no longer loading
+      }, 2000); // wait 2 seconds before loading is finished
+    },
+    [loading]
+  );
   if (loading)
     return (
       <div>
@@ -203,15 +211,11 @@ function Results(props) {
     return obj.Count > max.Count ? obj : max;
   });
   const popScale = scaleLinear()
-    .domain([0, maxCount.Count / 2, maxCount.Count])
-    .range(["#28af48", "#edbb1a", "#f72020"]);
-  function getRandomInt(max) {
-    return Math.floor(Math.random() * Math.floor(max));
-  }
+    .domain([0, maxCount.Count / 4, maxCount.Count])
+    .range(["#ffffff", "#edbb1a", "#f72020"]);
 
-  console.log(result);
   return (
-    <div style={wrapperStyles}>
+    <div style={wrapperStyles} ref={resultsRef}>
       <ComposableMap
         projectionConfig={{
           scale: 205
@@ -235,15 +239,14 @@ function Results(props) {
                 );
                 let count = 0;
                 if (!resultObject) {
-                  console.log("Couldnt find: " + lgaName);
                 } else {
                   count = resultObject.Count;
-                  console.log(lgaName + ": " + count);
                 }
 
                 return (
                   <Geography
                     key={i}
+                    data-tip={lgaName + ": Offences " + count}
                     geography={geography}
                     projection={projection}
                     style={{
@@ -273,6 +276,7 @@ function Results(props) {
           </Geographies>
         </ZoomableGroup>
       </ComposableMap>
+      <ReactTooltip />
     </div>
   );
 }
