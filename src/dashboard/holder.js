@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, Fragment } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { useList, useSearch, logOut } from "../api";
 import { scaleLinear } from "d3-scale";
@@ -190,9 +190,7 @@ function Results(props) {
     ReactTooltip.rebuild();
   };
   const toggleType = () => {
-    console.log("Changing Type");
-    if (type) setType(0);
-    else setType(1);
+    type ? setType(1) : setType(0);
   };
   if (loading)
     return (
@@ -236,37 +234,29 @@ function Results(props) {
   const numsOnly = result.map(({ result }) => result);
   const min = Math.min(...numsOnly.filter(isFinite));
   const max = Math.max(...numsOnly.filter(isFinite));
-  const countOnly = result.map(({ Count }) => Count);
-  const maxCount = Math.max(...countOnly);
 
   const popCol = scaleLinear()
     .domain([max, max / 8, max / 3, min])
-    .range(["#ffffff", "#74C67A", "#1D9A6C", "#000102"]);
+    .range(["#18e226", "#ff0000"]);
+  const offCol = "#ffffff";
 
-  const countCol = scaleLinear()
-    .domain([0, maxCount / 8, maxCount / 3, maxCount])
-    .range(["#ffffff", "#74C67A", "#1D9A6C", "#000102"]);
-
+  const getCol = val => {
+    if (!isFinite(val)) return "#ffffff";
+    return scaleLinear()
+      .domain([-5, 100 / 8, 100 / 3, 100])
+      .range(["#ffffff", "#74C67A", "#1D9A6C", "#000102"]);
+  };
+  console.log("Rebuilding");
   return (
     <div style={wrapperStyles} ref={resultsRef}>
+      {mapLoading ? <h4>Loading...</h4> : ""}
       {mapLoading ? (
-        <h4>Loading...</h4>
+        <button onClick={toggleType}>
+          Group by {type ? "Population" : "Offence"}
+        </button>
       ) : (
-        <Fragment>
-          {/* test */}
-          <h1>
-            Coloured by:{" "}
-            {type ? "Population and Offence Count" : "Offence Count #"}
-          </h1>
-          <a onClick={toggleType} class="float">
-            <p>
-              Change to colour by{" "}
-              {type ? "Offence Count" : "Population and Offence Count"}
-            </p>
-          </a>
-        </Fragment>
+        ""
       )}
-
       <ComposableMap
         projectionConfig={{
           scale: 205
@@ -305,13 +295,7 @@ function Results(props) {
                   <Geography
                     key={i}
                     data-tip={
-                      lgaName +
-                      ": Offences " +
-                      Count +
-                      ", Population " +
-                      pop +
-                      ", Capita per Offence " +
-                      result
+                      lgaName + ": Offences " + Count + ", Population " + pop
                     }
                     geography={geography}
                     projection={projection}
@@ -321,7 +305,7 @@ function Results(props) {
                           ? isFinite(result)
                             ? popCol(result)
                             : "#a0a0a0"
-                          : countCol(Count),
+                          : "#a0a0a0",
                         stroke: "#607D8B",
                         strokeWidth: 0.1,
                         outline: "none"
