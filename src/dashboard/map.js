@@ -77,10 +77,11 @@ function FilterItem(props) {
     return { value: props.special ? index + 1 : item, label: item };
   });
   return (
-    <div className="filter">
+    <div>
       <h3 className="capital">{props.field}s </h3>
       {props.field === "offence" ? (
         <Select
+          className="map-filter"
           id={props.field}
           onChange={handleChange}
           isLoading={props.loading}
@@ -89,6 +90,7 @@ function FilterItem(props) {
         />
       ) : (
         <Select
+          className="map-filter"
           id={props.field}
           isMulti
           onChange={handleChange}
@@ -125,12 +127,18 @@ function Offences(props) {
   const handleSubmit = () => {
     props.onSubmit(filters);
   };
-
+  const getBtn = () => {
+    return offenceValidate
+      ? props.loading
+        ? "Loading"
+        : `Search`
+      : "An offence is required";
+  };
   return (
     <div className="OffenceChooser">
       <div className="modal-container">
         <h1>Map Offences </h1>
-        <div className="filter-container">
+        <div className="map-Container">
           <DataFilterItem field="offence" updateFilter={setOffence} />
           <DataFilterItem
             field="age"
@@ -156,11 +164,12 @@ function Offences(props) {
             className="searchBtn"
             id="search-button"
             type="button"
-            disabled={offenceValidate ? false : true}
+            disabled={props.loading ? true : offenceValidate ? false : true}
             onClick={() => handleSubmit()}
           >
-            {offenceValidate ? `Search` : "An offence is required"}
+            {getBtn()}
           </button>
+          <div className={props.loading ? "lds-hourglass" : ""} />
         </div>
       </div>
     </div>
@@ -194,12 +203,9 @@ function Results(props) {
     if (type) setType(0);
     else setType(1);
   };
-  if (loading)
-    return (
-      <div style={wrapperStyles}>
-        <h4>Loading...</h4>
-      </div>
-    );
+  if (loading) props.loading(true);
+  else props.loading(false);
+
   if (error)
     return (
       <div>
@@ -259,10 +265,7 @@ function Results(props) {
             {type ? "Population and Offence Count" : "Offence Count #"}
           </h1>
           <a onClick={toggleType} class="float">
-            <p>
-              Change to colour by{" "}
-              {type ? "Offence Count" : "Population and Offence Count"}
-            </p>
+            <p>Colour by {type ? "Offences" : "Population/Offences"}</p>
           </a>
         </Fragment>
       )}
@@ -310,7 +313,7 @@ function Results(props) {
                       Count +
                       ", Population " +
                       pop +
-                      ", Capita per Offence " +
+                      ", Offence per Capita 1/" +
                       result
                     }
                     geography={geography}
@@ -352,11 +355,12 @@ function Results(props) {
 }
 
 export function MapPage() {
+  const [loading, setLoading] = useState(false);
   const [filters, setFilter] = useState("");
   return (
     <div>
-      <Offences onSubmit={setFilter} />
-      {filters ? <Results filters={filters} /> : ""}
+      <Offences onSubmit={setFilter} loading={loading} />
+      {filters ? <Results filters={filters} loading={setLoading} /> : ""}
     </div>
   );
 }
