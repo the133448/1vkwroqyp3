@@ -127,9 +127,7 @@ function Offences(props) {
   const handleSubmit = () => {
     props.onSubmit(filters);
   };
-  const getBtn = () => {
-    <div class="lds-hourglass" />;
-  };
+
   return (
     <div className="OffenceChooser">
       <div className="modal-container">
@@ -169,7 +167,6 @@ function Offences(props) {
                 : `Search`
               : "An offence is required"}
           </button>
-          {props.loading ? getBtn() : ""}
         </div>
       </div>
     </div>
