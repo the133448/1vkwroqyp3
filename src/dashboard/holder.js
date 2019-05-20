@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, Fragment } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { useList, useSearch, logOut } from "../api";
 import { scaleLinear } from "d3-scale";
@@ -77,10 +77,11 @@ function FilterItem(props) {
     return { value: props.special ? index + 1 : item, label: item };
   });
   return (
-    <div className="filter">
+    <div>
       <h3 className="capital">{props.field}s </h3>
       {props.field === "offence" ? (
         <Select
+          className="map-filter"
           id={props.field}
           onChange={handleChange}
           isLoading={props.loading}
@@ -89,6 +90,7 @@ function FilterItem(props) {
         />
       ) : (
         <Select
+          className="map-filter"
           id={props.field}
           isMulti
           onChange={handleChange}
@@ -125,12 +127,14 @@ function Offences(props) {
   const handleSubmit = () => {
     props.onSubmit(filters);
   };
-
+  const getBtn = () => {
+    <div class="lds-hourglass" />;
+  };
   return (
     <div className="OffenceChooser">
       <div className="modal-container">
         <h1>Map Offences </h1>
-        <div className="filter-container">
+        <div className="map-Container">
           <DataFilterItem field="offence" updateFilter={setOffence} />
           <DataFilterItem
             field="age"
@@ -156,11 +160,16 @@ function Offences(props) {
             className="searchBtn"
             id="search-button"
             type="button"
-            disabled={offenceValidate ? false : true}
+            disabled={props.loading ? true : offenceValidate ? false : true}
             onClick={() => handleSubmit()}
           >
-            {offenceValidate ? `Search` : "An offence is required"}
+            {offenceValidate
+              ? props.loading
+                ? "Loading"
+                : `Search`
+              : "An offence is required"}
           </button>
+          {props.loading ? getBtn() : ""}
         </div>
       </div>
     </div>
@@ -179,25 +188,19 @@ function Results(props) {
   const [mapLoading, setMapLoading] = useState(true);
   const [color, setColor] = useState({});
   let resultsRef = useRef();
-  const handleLoad = () => {
-    setMapLoading(false);
-    if (resultsRef.current) {
-      window.scrollTo({
-        behavior: "smooth",
-        top: resultsRef.current.offsetTop
-      });
-    }
-    ReactTooltip.rebuild();
-  };
+  if (loading) {
+    return <h1>Please wait data loading</h1>;
+  }
+
+  console.log("Rerendeer!!!");
   const toggleType = () => {
-    type ? setType(1) : setType(0);
+    console.log("Changing Type");
+    if (type) setType(0);
+    else setType(1);
   };
-  if (loading)
-    return (
-      <div style={wrapperStyles}>
-        <h4>Loading...</h4>
-      </div>
-    );
+  //props.error(error);
+  const { filters, loadState } = props;
+
   if (error)
     return (
       <div>
@@ -234,29 +237,45 @@ function Results(props) {
   const numsOnly = result.map(({ result }) => result);
   const min = Math.min(...numsOnly.filter(isFinite));
   const max = Math.max(...numsOnly.filter(isFinite));
-
+  const countOnly = result.map(({ Count }) => Count);
+  const maxCount = Math.max(...countOnly);
+  console.log(result);
+  console.log("min: ", min);
+  console.log("max: ", max);
   const popCol = scaleLinear()
-    .domain([max, max / 8, max / 3, min])
-    .range(["#18e226", "#ff0000"]);
-  const offCol = "#ffffff";
-
-  const getCol = val => {
-    if (!isFinite(val)) return "#ffffff";
-    return scaleLinear()
-      .domain([-5, 100 / 8, 100 / 3, 100])
-      .range(["#ffffff", "#74C67A", "#1D9A6C", "#000102"]);
+    .domain([max, max / 2, min * 2, min])
+    .range(["#ffffff", "#74C67A", "#1D9A6C", "#000102"]);
+  //100  0.5
+  const countCol = scaleLinear()
+    .domain([0, maxCount / 8, maxCount / 3, maxCount])
+    .range(["#ffffff", "#74C67A", "#1D9A6C", "#000102"]);
+  const handleLoad = () => {
+    setMapLoading(false);
+    if (resultsRef.current) {
+      window.scrollTo({
+        behavior: "smooth",
+        top: resultsRef.current.offsetTop
+      });
+    }
+    ReactTooltip.rebuild();
   };
-  console.log("Rebuilding");
   return (
     <div style={wrapperStyles} ref={resultsRef}>
-      {mapLoading ? <h4>Loading...</h4> : ""}
       {mapLoading ? (
-        <button onClick={toggleType}>
-          Group by {type ? "Population" : "Offence"}
-        </button>
+        <h4>Loading...</h4>
       ) : (
-        ""
+        <Fragment>
+          {/* test */}
+          <h1>
+            Coloured by:{" "}
+            {type ? "Population and Offence Count" : "Offence Count #"}
+          </h1>
+          <a onClick={toggleType} class="float">
+            <p>Colour by {type ? "Offences" : "Population/Offences"}</p>
+          </a>
+        </Fragment>
       )}
+
       <ComposableMap
         projectionConfig={{
           scale: 205
@@ -295,7 +314,13 @@ function Results(props) {
                   <Geography
                     key={i}
                     data-tip={
-                      lgaName + ": Offences " + Count + ", Population " + pop
+                      lgaName +
+                      ": Offences " +
+                      Count +
+                      ", Population " +
+                      pop +
+                      ", Offence per Capita 1/" +
+                      result
                     }
                     geography={geography}
                     projection={projection}
@@ -304,8 +329,8 @@ function Results(props) {
                         fill: type
                           ? isFinite(result)
                             ? popCol(result)
-                            : "#a0a0a0"
-                          : "#a0a0a0",
+                            : "#ffffff"
+                          : countCol(Count),
                         stroke: "#607D8B",
                         strokeWidth: 0.1,
                         outline: "none"
@@ -337,9 +362,21 @@ function Results(props) {
 
 export function MapPage() {
   const [filters, setFilter] = useState("");
+  const [dataLoading, setDataLoading] = useState(false);
+
+  const test = () => {
+    console.log("test");
+    setDataLoading(true);
+  };
+  const test2 = () => {
+    console.log("test");
+    setDataLoading(false);
+  };
   return (
     <div>
-      <Offences onSubmit={setFilter} />
+      <button onClick={test}>Test Button :D</button>
+      <button onClick={test2}>enable :D</button>
+      <Offences onSubmit={setFilter} loading={dataLoading} />
       {filters ? <Results filters={filters} /> : ""}
     </div>
   );

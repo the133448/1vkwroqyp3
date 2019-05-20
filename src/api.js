@@ -141,6 +141,7 @@ export function useSearch(params) {
       .map(k => esc(k) + "=" + esc(params[k]))
       .join("&");
     console.log(query);
+
     getSearch(query)
       .then(result => {
         //setError("Failed to communicate with Login server");

@@ -128,11 +128,7 @@ function Offences(props) {
     props.onSubmit(filters);
   };
   const getBtn = () => {
-    return offenceValidate
-      ? props.loading
-        ? "Loading"
-        : `Search`
-      : "An offence is required";
+    <div class="lds-hourglass" />;
   };
   return (
     <div className="OffenceChooser">
@@ -167,9 +163,13 @@ function Offences(props) {
             disabled={props.loading ? true : offenceValidate ? false : true}
             onClick={() => handleSubmit()}
           >
-            {getBtn()}
+            {offenceValidate
+              ? props.loading
+                ? "Loading"
+                : `Search`
+              : "An offence is required"}
           </button>
-          <div className={props.loading ? "lds-hourglass" : ""} />
+          {props.loading ? getBtn() : ""}
         </div>
       </div>
     </div>
@@ -186,25 +186,12 @@ function Results(props) {
   let { loading, result, error } = useSearch(props.filters);
   const [type, setType] = useState(0);
   const [mapLoading, setMapLoading] = useState(true);
-  const [color, setColor] = useState({});
   let resultsRef = useRef();
-  const handleLoad = () => {
-    setMapLoading(false);
-    if (resultsRef.current) {
-      window.scrollTo({
-        behavior: "smooth",
-        top: resultsRef.current.offsetTop
-      });
-    }
-    ReactTooltip.rebuild();
-  };
+
   const toggleType = () => {
-    console.log("Changing Type");
     if (type) setType(0);
     else setType(1);
   };
-  if (loading) props.loading(true);
-  else props.loading(false);
 
   if (error)
     return (
@@ -244,15 +231,26 @@ function Results(props) {
   const max = Math.max(...numsOnly.filter(isFinite));
   const countOnly = result.map(({ Count }) => Count);
   const maxCount = Math.max(...countOnly);
-
+  console.log(result);
+  console.log("min: ", min);
+  console.log("max: ", max);
   const popCol = scaleLinear()
-    .domain([max, max / 8, max / 3, min])
+    .domain([max, max / 2, min * 2, min])
     .range(["#ffffff", "#74C67A", "#1D9A6C", "#000102"]);
-
+  //100  0.5
   const countCol = scaleLinear()
     .domain([0, maxCount / 8, maxCount / 3, maxCount])
     .range(["#ffffff", "#74C67A", "#1D9A6C", "#000102"]);
-
+  const handleLoad = () => {
+    setMapLoading(false);
+    if (resultsRef.current) {
+      window.scrollTo({
+        behavior: "smooth",
+        top: resultsRef.current.offsetTop
+      });
+    }
+    ReactTooltip.rebuild();
+  };
   return (
     <div style={wrapperStyles} ref={resultsRef}>
       {mapLoading ? (
@@ -260,12 +258,9 @@ function Results(props) {
       ) : (
         <Fragment>
           {/* test */}
-          <h1>
-            Coloured by:{" "}
-            {type ? "Population and Offence Count" : "Offence Count #"}
-          </h1>
+          <h1>By: {type ? "Offences per Capita" : "Offence Count"}</h1>
           <a onClick={toggleType} class="float">
-            <p>Colour by {type ? "Offences" : "Population/Offences"}</p>
+            <p>Colour by {type ? "Offences" : "Offences per Capita"}</p>
           </a>
         </Fragment>
       )}
@@ -298,23 +293,24 @@ function Results(props) {
                   results[lgaName] = {
                     lga: lgaName,
                     Count: 0,
-                    pop: "Unkown",
-                    result: Infinity,
+                    pop: "Unknown",
+                    result: undefined,
                     exists: false
                   };
                 }
                 const { Count, pop, result } = results[lgaName];
+                let resultS = "";
+                if (result) resultS = ", Offence per Capita 1/" + result;
                 return (
                   <Geography
                     key={i}
                     data-tip={
                       lgaName +
-                      ": Offences " +
+                      "<br />Offences " +
                       Count +
                       ", Population " +
                       pop +
-                      ", Offence per Capita 1/" +
-                      result
+                      resultS
                     }
                     geography={geography}
                     projection={projection}
@@ -323,7 +319,7 @@ function Results(props) {
                         fill: type
                           ? isFinite(result)
                             ? popCol(result)
-                            : "#a0a0a0"
+                            : "#ffffff"
                           : countCol(Count),
                         stroke: "#607D8B",
                         strokeWidth: 0.1,
@@ -349,18 +345,19 @@ function Results(props) {
           </Geographies>
         </ZoomableGroup>
       </ComposableMap>
-      <ReactTooltip />
+      <ReactTooltip multiline={true} />
     </div>
   );
 }
 
 export function MapPage() {
-  const [loading, setLoading] = useState(false);
   const [filters, setFilter] = useState("");
+  const [dataLoading, setDataLoading] = useState(false);
+
   return (
     <div>
-      <Offences onSubmit={setFilter} loading={loading} />
-      {filters ? <Results filters={filters} loading={setLoading} /> : ""}
+      <Offences onSubmit={setFilter} loading={dataLoading} />
+      {filters ? <Results filters={filters} /> : ""}
     </div>
   );
 }
