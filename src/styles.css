@@ -557,3 +557,45 @@ footer {
     transform: rotate(0deg);
   }
 }
+.legends {
+  position: fixed;
+  /* display: inline-grid; */
+  width: auto;
+  right: 25%;
+  bottom: 2%;
+  border-radius: 10px;
+  text-align: right;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  padding: 10px;
+  height: 8%;
+}
+
+@media (max-width: 1540px) {
+  .legends {
+    display: none;
+  }
+}
+.axis {
+  width: 420px;
+  padding-right: 20px;
+  padding-left: 20px;
+}
+.legendTitle {
+  font-size: 15px;
+  fill: #4f4f4f;
+  font-weight: 12;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: none; /*black;*/
+  shape-rendering: crispEdges;
+}
+
+.axis text {
+  font-family: Consolas, courier;
+  fill: #000;
+  font-size: 9pt;
+}

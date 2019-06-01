@@ -4,7 +4,7 @@ import { useList, useMultiSearch } from "../api";
 import Select from "react-select";
 
 import { Line } from "react-chartjs-2";
-import { Loader } from "./common";
+import { Loader, Offences } from "./common";
 
 const GenerateGraph = (label, data) => ({
   labels: label,
@@ -28,6 +28,7 @@ const GenerateGraph = (label, data) => ({
       pointHoverBorderWidth: 2,
       pointRadius: 1,
       pointHitRadius: 10,
+
       data: data
     }
   ]
@@ -97,58 +98,8 @@ function FilterItem(props) {
   );
 }
 
-function Offences(props) {
-  const [offence, setOffence] = useState([]);
-  const [age, setAge] = useState([]);
-  const [gender, setGender] = useState([]);
-
-  let offenceValidate = false;
-  if (offence.length >= 1) {
-    offenceValidate = true;
-  }
-
-  const filters = {
-    offence,
-    age,
-    gender
-  };
-
-  const handleSubmit = () => {
-    props.onSubmit(filters);
-  };
-
-  return (
-    <div className="OffenceChooser">
-      <div className="modal-container">
-        <div className="filter-container">
-          <DataFilterItem field="offence" updateFilter={setOffence} />
-          <DataFilterItem
-            field="age"
-            updateFilter={setAge}
-            disabled={offenceValidate ? false : true}
-          />
-          <DataFilterItem
-            field="gender"
-            updateFilter={setGender}
-            disabled={offenceValidate ? false : true}
-          />
-          <button
-            className="searchBtn"
-            id="search-button"
-            type="button"
-            disabled={offenceValidate ? false : true}
-            onClick={() => handleSubmit()}
-          >
-            {offenceValidate ? `Search` : "An offence is required"}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
 function Results(props) {
   const { loading, result, error } = useMultiSearch(props.filters);
-  const [search, setSearch] = useState("");
   let resultsRef = useRef();
   useEffect(() => {
     if (resultsRef.current) {
@@ -196,7 +147,7 @@ export function GraphPage() {
     <>
       <h1>Graph Page</h1>
 
-      <Offences onSubmit={setFilter} />
+      <Offences onSubmit={setFilter} type={2} />
       {filters ? <Results filters={filters} /> : ""}
     </>
   );

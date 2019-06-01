@@ -195,7 +195,12 @@ export function useMultiSearch(params) {
 
   useEffect(() => {
     setLoading(true);
+    //We need to take this out as we artifically add in a year to the query
+
+    delete params.year;
+
     const esc = encodeURIComponent;
+
     const query = Object.keys(params)
       .map(k => esc(k) + "=" + esc(params[k]))
       .join("&");

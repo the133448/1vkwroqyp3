@@ -4,6 +4,8 @@ import { useList, useSearch, logOut } from "../api";
 import { Loader } from "./common";
 import { scaleLinear } from "d3-scale";
 import ReactTooltip from "react-tooltip";
+import * as d3 from "d3";
+
 import {
   ComposableMap,
   ZoomableGroup,
@@ -179,6 +181,71 @@ const wrapperStyles = {
   maxWidth: 980
 };
 
+function GenLegend(props) {
+  let svgLegend = d3.select(props.name);
+  svgLegend.html("");
+  var defs = svgLegend.append("defs");
+
+  // append a linearGradient element to the defs and give it a unique id
+  const id = "linear-gradient".concat(props.lower, props.upper);
+
+  var linearGradient = defs.append("linearGradient").attr("id", id);
+
+  // horizontal gradient
+  linearGradient
+    .attr("x1", "0%")
+    .attr("y1", "0%")
+    .attr("x2", "100%")
+    .attr("y2", "0%");
+
+  // append multiple color stops by using D3's data/enter step
+
+  linearGradient
+    .selectAll("stop")
+    .data(props.scale.domain())
+    .enter()
+    .append("stop")
+    .attr("offset", function(d) {
+      return d + "%";
+    })
+    .attr("stop-color", function(d) {
+      return props.scale(d);
+    });
+
+  // append title
+  svgLegend
+    .append("text")
+    .attr("class", "legendTitle")
+    .attr("x", 0)
+    .attr("y", 20)
+    .style("text-anchor", "left")
+    .text(props.string);
+
+  // draw the rectangle and fill with gradient
+  svgLegend
+    .append("rect")
+    .attr("x", 10)
+    .attr("y", 30)
+    .attr("width", 400)
+    .attr("height", 15)
+    .style("fill", `url(#${id})`);
+
+  //create tick marks
+  var xLeg = d3
+    .scaleLinear()
+    .domain([props.lower, props.upper])
+    .range([10, 400]);
+
+  var axisLeg = d3.axisBottom(xLeg).tickValues(props.scale.domain());
+
+  svgLegend
+    .attr("class", "axis")
+    .append("g")
+    .attr("transform", "translate(0, 40)")
+    .call(axisLeg);
+  return <> </>;
+}
+
 function Results(props) {
   let { loading, result, error } = useSearch(props.filters);
   const [type, setType] = useState(0);
@@ -228,9 +295,9 @@ function Results(props) {
   const max = Math.max(...numsOnly.filter(isFinite));
   const countOnly = result.map(({ Count }) => Count);
   const maxCount = Math.max(...countOnly);
-  console.log(result);
   console.log("min: ", min);
   console.log("max: ", max);
+
   const popCol = scaleLinear()
     .domain([max, max / 2, min * 2, min])
     .range(["#ffffff", "#74C67A", "#1D9A6C", "#000102"]);
@@ -248,12 +315,13 @@ function Results(props) {
     }
     ReactTooltip.rebuild();
   };
+  if (!loading) {
+  }
   return (
     <div style={wrapperStyles} ref={resultsRef}>
       <Loader on={loading} />
-
       {mapLoading ? (
-        <h4>Loading...</h4>
+        ""
       ) : (
         <Fragment>
           {/* test */}
@@ -264,6 +332,24 @@ function Results(props) {
           </a>
         </Fragment>
       )}
+      <GenLegend
+        scale={countCol}
+        upper={maxCount}
+        lower={0}
+        name="#legend-count"
+        string="Offences Legend"
+      />
+      <GenLegend
+        scale={popCol}
+        upper={min}
+        lower={max}
+        name="#legend-pop"
+        string="Offences/Capita Legend"
+      />
+      <div className="legends">
+        <svg id="legend-count" className="legend" />
+        <svg id="legend-pop" className="legend" />
+      </div>
 
       <ComposableMap
         projectionConfig={{
@@ -352,11 +438,10 @@ function Results(props) {
 
 export function MapPage() {
   const [filters, setFilter] = useState("");
-  const [dataLoading, setDataLoading] = useState(false);
 
   return (
     <div>
-      <Offences onSubmit={setFilter} loading={dataLoading} />
+      <Offences onSubmit={setFilter} />
       {filters ? <Results filters={filters} /> : ""}
     </div>
   );
