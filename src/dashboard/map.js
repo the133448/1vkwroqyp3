@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, Fragment } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { useList, useSearch, logOut } from "../api";
+import { Loader } from "./common";
 import { scaleLinear } from "d3-scale";
 import ReactTooltip from "react-tooltip";
 import {
@@ -249,7 +250,7 @@ function Results(props) {
   };
   return (
     <div style={wrapperStyles} ref={resultsRef}>
-      {loading ? <div class="lds-hourglass" /> : ""}
+      <Loader on={loading} />
 
       {mapLoading ? (
         <h4>Loading...</h4>

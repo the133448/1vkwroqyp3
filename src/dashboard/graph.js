@@ -4,6 +4,7 @@ import { useList, useMultiSearch } from "../api";
 import Select from "react-select";
 
 import { Line } from "react-chartjs-2";
+import { Loader } from "./common";
 
 const GenerateGraph = (label, data) => ({
   labels: label,
@@ -157,12 +158,12 @@ function Results(props) {
       });
     }
   }, [loading]);
-  if (loading)
-    return (
-      <div>
-        <h4>Loading...</h4>
-      </div>
-    );
+  // if (loading)
+  //   return (
+  //     <div>
+  //       <h4>Loading...</h4>
+  //     </div>
+  //   );
   if (error)
     return (
       <div>
@@ -171,17 +172,20 @@ function Results(props) {
       </div>
     );
 
-  const fillRange = (start, end) => {
-    return Array(end - start + 1)
-      .fill()
-      .map((item, index) => start + index);
-  };
+  const sortResult = result.sort();
+  const label = sortResult.map(function(value, index) {
+    return value[0];
+  });
+  const data = sortResult.map(function(value, index) {
+    return value[1];
+  });
 
   return (
     <div ref={resultsRef}>
+      <Loader on={loading} />
       <h3>Graph for: {props.filters.offence[0]}</h3>
 
-      <Line data={GenerateGraph(result)} />
+      <Line data={GenerateGraph(label, data)} />
     </div>
   );
 }

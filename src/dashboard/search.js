@@ -4,6 +4,7 @@ import { useList, useSearch, logOut } from "../api";
 import SmartDataTable from "react-smart-data-table";
 
 import Select from "react-select";
+import { Loader } from "./common";
 
 function MonthFilterItem(props) {
   const months = [
@@ -171,12 +172,12 @@ function Results(props) {
       });
     }
   }, [loading]);
-  if (loading)
-    return (
-      <div>
-        <h4>Loading...</h4>
-      </div>
-    );
+  // if (loading)
+  //   return (
+  //     <div>
+  //       <h4>Loading...</h4>
+  //     </div>
+  //   );
   if (error)
     return (
       <div>
@@ -186,6 +187,8 @@ function Results(props) {
     );
   return (
     <div ref={resultsRef}>
+      <Loader on={loading} />
+
       <h3>Results for: {props.filters.offence[0]}</h3>
       <div>
         <label>Find a local government </label>
