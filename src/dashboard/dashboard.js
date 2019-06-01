@@ -58,7 +58,7 @@ export function DashboardPage(props) {
   return (
     <div className="padded">
       <div className="navbar">
-        <h4 className="user">Welcome back {localStorage.getItem("EMAIL")}</h4>
+        <h4 className="user">Logged in as {localStorage.getItem("EMAIL")}</h4>
 
         <Link to="/logout" className="logout">
           Logout{" "}
