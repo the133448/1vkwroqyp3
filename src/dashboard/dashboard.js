@@ -15,7 +15,7 @@ function SideBar(props) {
             props.type === 1 ? "dash-btn table active" : "dash-btn b-table"
           }
         >
-          Search
+          Stats
         </button>
       </Link>
       <Link to="/dashboard/graph">
