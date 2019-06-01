@@ -176,15 +176,11 @@ export function Offences(props) {
             updateFilter={setGender}
             disabled={offenceValidate ? false : true}
           />
-          {!props.type === 2 ? (
-            <DataFilterItem
-              field="year"
-              updateFilter={setYear}
-              disabled={offenceValidate ? false : true}
-            />
-          ) : (
-            ""
-          )}
+          <DataFilterItem
+            field="year"
+            updateFilter={setYear}
+            disabled={offenceValidate ? false : true}
+          />
           <MonthFilterItem
             field="month"
             updateFilter={setMonth}
