@@ -269,9 +269,6 @@ div.content {
   color: #ffffff;
 }
 
-.OffenceChooser {
-}
-
 select {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -379,12 +376,15 @@ footer {
 .map-Container {
   position: fixed;
   width: 20%;
-  height: 60px;
   right: 40px;
   top: 15%;
-  border-radius: 50px;
+  border-radius: 10px;
   text-align: right;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  padding: 10px;
 }
+
 .map-filter {
   text-align: left;
 }
@@ -403,9 +403,31 @@ footer {
 .filter {
   padding: 10px;
 }
+
+@media (max-width: 1540px) {
+  .filter-container {
+    display: block;
+  }
+  .map-Container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    position: inherit;
+    width: initial;
+    box-shadow: none;
+  }
+}
 @media (max-width: 900px) {
   .filter-container {
     display: block;
+  }
+  .map-Container {
+    display: block;
+    position: inherit;
+    width: initial;
+    text-align: left;
+    box-shadow: none;
   }
 }
 
@@ -459,9 +481,11 @@ footer {
 
 .lds-hourglass {
   display: inline-block;
-  position: relative;
   width: 64px;
   height: 34px;
+  position: fixed;
+  bottom: 170px;
+  right: 240px;
 }
 .lds-hourglass:after {
   content: " ";

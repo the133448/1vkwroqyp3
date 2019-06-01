@@ -187,3 +187,89 @@ function getSearch(offence) {
       }))
     );
 }
+
+export function useMultiSearch(params) {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [result, setResult] = useState([]);
+
+  useEffect(() => {
+    setLoading(true);
+    const esc = encodeURIComponent;
+    const query = Object.keys(params)
+      .map(k => esc(k) + "=" + esc(params[k]))
+      .join("&");
+    console.log(query);
+    let dataset = [];
+    const fillRange = (start, end) => {
+      return Array(end - start + 1)
+        .fill()
+        .map((item, index) => start + index);
+    };
+    let yearRange = fillRange(2001, 2019);
+    try {
+      var fetches = [];
+      for (var i = 0; i < yearRange.length; i++) {
+        fetches.push(
+          getMultiSearch(query, yearRange[i])
+            .then(result => {
+              //setError("Failed to communicate with Login server");
+              dataset.push(result);
+            })
+            .catch(resError => {
+              setLoading(false);
+              if (resError.message === "Failed to fetch")
+                setError("Unable to communicate with API Server");
+              else setError(JSON.parse(resError.message).error);
+            })
+        );
+      }
+      Promise.all(fetches).then(function() {
+        console.log("DATA: ", dataset);
+        setResult(dataset);
+        setLoading(false);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }, [params]);
+  return {
+    loading,
+    result,
+    error
+  };
+}
+
+function getMultiSearch(offence, year) {
+  let endPoint = `${API_PATH}search?${offence}`;
+  endPoint = endPoint + `&year=${year}`;
+
+  return fetch(endPoint, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${API_KEY}`
+    }
+  })
+    .then(result => {
+      if (result.ok) {
+        return result.json();
+      }
+      //setError("Failed to communicate with Login server");
+      return result.text().then(text => {
+        throw new Error(text);
+      });
+    })
+    .then(res => res.result)
+    .then(result => {
+      let count = 0;
+      result.forEach(function(item) {
+        count += item.total;
+      });
+
+      return [year, count];
+      // result.map(item => ({
+      //   "Local Government": item.LGA,
+      //   Count: item.total
+      // }));
+    });
+}

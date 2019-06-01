@@ -175,8 +175,7 @@ function Offences(props) {
 
 const wrapperStyles = {
   width: "100%",
-  maxWidth: 980,
-  margin: "0 auto"
+  maxWidth: 980
 };
 
 function Results(props) {
@@ -250,13 +249,16 @@ function Results(props) {
   };
   return (
     <div style={wrapperStyles} ref={resultsRef}>
+      {loading ? <div class="lds-hourglass" /> : ""}
+
       {mapLoading ? (
         <h4>Loading...</h4>
       ) : (
         <Fragment>
           {/* test */}
           <h1>By: {type ? "Offences per Capita" : "Offence Count"}</h1>
-          <a onClick={toggleType} class="float">
+          {loading ? <h1>loading</h1> : ""}
+          <a onClick={toggleType} className="float">
             <p>Colour by {type ? "Offences" : "Offences per Capita"}</p>
           </a>
         </Fragment>
