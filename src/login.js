@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { useLogin } from "./api";
 
+//Common pareant to enable prefilled login on succfull register
 export function AuthPage(props) {
   const [login, setLogin] = useState("");
   return props.login ? (
     <LoginPage
       prefill={login}
+      //If hash value exists expire or logout we use this to show a
+      //banner on the login page.
       expired={props.location.hash === "#expire" ? true : false}
       logout={props.location.hash === "#logout" ? true : false}
     />
@@ -14,6 +17,7 @@ export function AuthPage(props) {
     <RegisterPage onSubmit={setLogin} />
   );
 }
+//Both login and Register are identical in that they use the same form page
 
 function LoginPage(props) {
   document.title = "Login | POLICE ADMIN";
@@ -37,6 +41,7 @@ function RegisterPage(props) {
   document.title = "Register | POLICE ADMIN";
   const [loginData, setloginData] = useState(null);
   const { loading, error } = useLogin(loginData, false);
+  //track sucesfully login as code 111
   if (error === 111) props.onSubmit(loginData);
 
   return (
@@ -103,7 +108,7 @@ function FormPage(props) {
         ) : null}
         <form onSubmit={submitEvent}>
           <input
-            type="text" //TODO Change to email
+            type="email" //TODO Change to email
             className="login-field"
             placeholder="email"
             id="email"
@@ -131,6 +136,7 @@ function FormPage(props) {
         </form>
         <div className="sign-up">
           <p className="su-text">
+            {/* little hack to ensure the correct message is shown on the page */}
             {props.login ? "Don't h" : "H"}ave an account?{" "}
           </p>
           <Link

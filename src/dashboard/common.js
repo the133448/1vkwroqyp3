@@ -34,6 +34,7 @@ export function Loader(props) {
   else return <div />;
 }
 
+//Months are not provided by API therefore we need a manual dataset
 function MonthFilterItem(props) {
   const months = [
     "January",
@@ -50,6 +51,7 @@ function MonthFilterItem(props) {
     "December"
   ];
   return (
+    //nice filter item to display it
     <FilterItem
       field={props.field}
       data={months}
@@ -64,6 +66,7 @@ function DataFilterItem(props) {
   const endPoint = `${props.field}s`;
   const { loading, lists, error } = useList(endPoint);
   if (error)
+    //error message if API doesnt load
     return (
       <div>
         <h1>Oops! Something happened.</h1>
@@ -84,6 +87,7 @@ function DataFilterItem(props) {
 function FilterItem(props) {
   const handleChange = selectedOption => {
     let data = null;
+    //formats all the selectied options ready to pass back
     if (!(selectedOption.length === undefined)) {
       data = selectedOption.map(function(item) {
         return item.value;
@@ -103,6 +107,7 @@ function FilterItem(props) {
     <div className="filter">
       <h3 className="capital">{props.field}s </h3>
       {props.field === "offence" ? (
+        // offences are different
         <Select
           id={props.field}
           onChange={handleChange}
@@ -126,6 +131,7 @@ function FilterItem(props) {
 }
 
 export function Offences(props) {
+  //track all selections
   const [offence, setOffence] = useState([]);
   const [age, setAge] = useState([]);
   const [gender, setGender] = useState([]);
@@ -156,6 +162,7 @@ export function Offences(props) {
       <div className="modal-container">
         <div className="filter-container">
           <DataFilterItem field="offence" updateFilter={setOffence} />
+          {/* List of items needed */}
           {props.type === 2 ? (
             <DataFilterItem
               field="area"
@@ -175,11 +182,16 @@ export function Offences(props) {
             updateFilter={setGender}
             disabled={offenceValidate ? false : true}
           />
-          <DataFilterItem
-            field="year"
-            updateFilter={setYear}
-            disabled={offenceValidate ? false : true}
-          />
+          {props.type === 2 ? (
+            ""
+          ) : (
+            <DataFilterItem
+              field="year"
+              updateFilter={setYear}
+              disabled={offenceValidate ? false : true}
+            />
+          )}
+
           <MonthFilterItem
             field="month"
             updateFilter={setMonth}

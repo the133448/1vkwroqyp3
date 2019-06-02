@@ -107,6 +107,8 @@ function App() {
       <footer className="footer">
         <p>
           {process.env.REACT_APP_NAME}-{process.env.REACT_APP_VERSION}(Built:
+          {/* This pravl gets executed in both dev and prod to tell 
+          what version the app is running */}
           {preval`module.exports = new Date().toLocaleString();`}.) (Daniel
           Johns - n9961119)
         </p>

@@ -82,7 +82,7 @@ export function GraphPage() {
   return (
     <>
       <h1>Graph Page</h1>
-
+      {/* Only show results once offences are submitted */}
       <Offences onSubmit={setFilter} type={2} />
       {filters ? <Results filters={filters} /> : ""}
     </>

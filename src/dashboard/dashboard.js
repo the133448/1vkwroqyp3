@@ -8,6 +8,7 @@ import { MapPage } from "./map";
 
 function SideBar(props) {
   return (
+    //simple tracking which one is active and applying a differnt CSS
     <aside className="sidebar">
       <Link to="/dashboard/table">
         <button
@@ -31,6 +32,7 @@ function SideBar(props) {
 }
 
 export function CurrentView(props) {
+  //handles routing the correct view based on the prop.type
   if (props.type === 1) {
     return <SearchPage />;
   } else if (props.type === 2) {
@@ -41,6 +43,7 @@ export function CurrentView(props) {
 }
 
 export function Dashboard(props) {
+  //Main dashboard page with sidedbar, navbar and content
   return (
     <DashboardPage>
       <SideBar type={props.type} />
@@ -69,12 +72,14 @@ export function DashboardPage(props) {
 
 export function DashboardRoutes(props) {
   return (
+    //dashboard routes
     <>
       <Route
         exact
         path="/dashboard"
         render={() => {
           console.log("Requesting /dashboard View");
+
           switch (isLoggedIn()) {
             case 0:
             default:
@@ -90,6 +95,8 @@ export function DashboardRoutes(props) {
         path="/dashboard/table"
         render={() => {
           console.log("Requesting /dashboard/table View");
+          //We need to check isLoggedIn as the user might of come here
+          //from a URL
           switch (isLoggedIn()) {
             case 0:
             default:

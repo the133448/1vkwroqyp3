@@ -404,7 +404,7 @@ footer {
   padding: 10px;
 }
 
-@media (max-width: 1540px) {
+/* @media (max-width: 1540px) {
   .filter-container {
     display: block;
   }
@@ -417,8 +417,8 @@ footer {
     width: initial;
     box-shadow: none;
   }
-}
-@media (max-width: 900px) {
+} */
+@media (max-width: 1540px) {
   .filter-container {
     display: block;
   }
