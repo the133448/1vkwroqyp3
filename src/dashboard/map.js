@@ -197,6 +197,14 @@ function getLongNumberFormat(num) {
   return (num / 1000).toFixed(num % 1000 !== 0) + "k";
 }
 
+function d3NonSIformat(d) {
+  if (d > 1) {
+    return d3.format(".2s")(d);
+  }
+  // return no SI formatting
+  return d3.format(".2")(d);
+}
+
 function GenLegend(props) {
   let svgLegend = d3.select(props.name);
   svgLegend.html("");
@@ -313,11 +321,11 @@ function GenLegend(props) {
   var axisLegCount = d3
     .axisBottom(xLeg)
     .tickValues(props.scale.domain())
-    .tickFormat(d3.format(".2s"));
+    .tickFormat(d3NonSIformat);
   var axisLegPop = d3
     .axisBottom(xLeg)
     .tickValues([props.lower, props.lower / 2, props.upper])
-    .tickFormat(d3.format(".2s"));
+    .tickFormat(d3NonSIformat);
   //.tickFormat(getLongNumberFormat());
   svgLegend
     .attr("class", "axis")
