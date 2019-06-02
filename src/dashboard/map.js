@@ -181,36 +181,102 @@ const wrapperStyles = {
   maxWidth: 980
 };
 
+function getLongNumberFormat(num) {
+  console.log("NUM", num);
+  num = num + ""; // coerce to string
+  if (num < 1000) {
+    // var n = num.toFixed(3)
+    return parseFloat(num).toFixed(2);
+    //return Math.round(num); // return the same number
+  }
+  if (num < 10000) {
+    // place a comma between
+    return num.charAt(0) + "," + num.substring(1);
+  }
+  // divide and format
+  return (num / 1000).toFixed(num % 1000 !== 0) + "k";
+}
+
 function GenLegend(props) {
   let svgLegend = d3.select(props.name);
   svgLegend.html("");
   var defs = svgLegend.append("defs");
 
   // append a linearGradient element to the defs and give it a unique id
-  const id = "linear-gradient".concat(props.lower, props.upper);
 
-  var linearGradient = defs.append("linearGradient").attr("id", id);
+  var linearGradientCount = defs
+    .append("linearGradient")
+    .attr("id", "#legend-count");
 
   // horizontal gradient
-  linearGradient
+  linearGradientCount
     .attr("x1", "0%")
     .attr("y1", "0%")
     .attr("x2", "100%")
     .attr("y2", "0%");
 
-  // append multiple color stops by using D3's data/enter step
+  // #ffffff", "#74C67A", "#1D9A6C", "#000102
 
-  linearGradient
+  // append multiple color stops by using D3's data/enter step
+  linearGradientCount
     .selectAll("stop")
-    .data(props.scale.domain())
+    .data([
+      { offset: "0%", color: "#ffffff" },
+      { offset: "12.5%", color: "#74C67A" },
+      { offset: "33%", color: "#1D9A6C" },
+      { offset: "100%", color: "#000102" }
+    ])
     .enter()
     .append("stop")
     .attr("offset", function(d) {
-      return d + "%";
+      return d.offset;
     })
     .attr("stop-color", function(d) {
-      return props.scale(d);
+      return d.color;
     });
+
+  var linearGradientPop = defs
+    .append("linearGradient")
+    .attr("id", "#legend-pop");
+
+  // horizontal gradient
+  linearGradientPop
+    .attr("x1", "0%")
+    .attr("y1", "0%")
+    .attr("x2", "100%")
+    .attr("y2", "0%");
+
+  // #ffffff", "#74C67A", "#1D9A6C", "#000102
+
+  // append multiple color stops by using D3's data/enter step
+  linearGradientPop
+    .selectAll("stop")
+    .data([
+      { offset: "0%", color: "#ffffff" },
+      { offset: "12.5%", color: "#74C67A" },
+      { offset: "33%", color: "#1D9A6C" },
+      { offset: "100%", color: "#000102" }
+    ])
+    .enter()
+    .append("stop")
+    .attr("offset", function(d) {
+      return d.offset;
+    })
+    .attr("stop-color", function(d) {
+      return d.color;
+    });
+
+  // linearGradient
+  //   .selectAll("stop")
+  //   .data(props.scale.domain())
+  //   .enter()
+  //   .append("stop")
+  //   .attr("offset", function(d) {
+  //     return d + "%";
+  //   })
+  //   .attr("stop-color", function(d) {
+  //     return props.scale(d);
+  //   });
 
   // append title
   svgLegend
@@ -228,7 +294,7 @@ function GenLegend(props) {
     .attr("y", 30)
     .attr("width", 400)
     .attr("height", 15)
-    .style("fill", `url(#${id})`);
+    .style("fill", `url(#${props.name})`);
 
   //create tick marks
   var xLeg = d3
@@ -386,16 +452,18 @@ function Results(props) {
                 }
                 const { Count, pop, result } = results[lgaName];
                 let resultS = "";
-                if (result) resultS = ", Offence per Capita 1/" + result;
+                if (result)
+                  resultS =
+                    ", Offence per Capita 1/" + getLongNumberFormat(result);
                 return (
                   <Geography
                     key={i}
                     data-tip={
                       lgaName +
                       "<br />Offences " +
-                      Count +
+                      getLongNumberFormat(Count) +
                       ", Population " +
-                      pop +
+                      getLongNumberFormat(pop) +
                       resultS
                     }
                     geography={geography}

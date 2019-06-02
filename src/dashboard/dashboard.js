@@ -11,9 +11,7 @@ function SideBar(props) {
     <aside className="sidebar">
       <Link to="/dashboard/table">
         <button
-          className={
-            props.type === 1 ? "dash-btn table active" : "dash-btn b-table"
-          }
+          className={props.type === 1 ? "dash-btn table active" : "dash-btn"}
         >
           Stats
         </button>

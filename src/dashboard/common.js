@@ -154,7 +154,6 @@ export function Offences(props) {
   return (
     <div className="OffenceChooser">
       <div className="modal-container">
-        <h1>Search Offences </h1>
         <div className="filter-container">
           <DataFilterItem field="offence" updateFilter={setOffence} />
           {props.type === 2 ? (

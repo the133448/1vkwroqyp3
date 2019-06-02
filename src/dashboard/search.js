@@ -55,6 +55,7 @@ export function SearchPage() {
   const [filters, setFilter] = useState("");
   return (
     <div>
+      <h1>Search Offences </h1>
       <Offences onSubmit={setFilter} />
       {filters ? <Results filters={filters} /> : ""}
     </div>

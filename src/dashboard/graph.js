@@ -1,11 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link, Redirect } from "react-router-dom";
-import { useList, useMultiSearch } from "../api";
-import Select from "react-select";
+import { useMultiSearch } from "../api";
 
 import { Line } from "react-chartjs-2";
 import { Loader, Offences } from "./common";
-
+//helper to generate chart.js Line graph
 const GenerateGraph = (label, data) => ({
   labels: label,
   datasets: [
@@ -34,74 +32,11 @@ const GenerateGraph = (label, data) => ({
   ]
 });
 
-function DataFilterItem(props) {
-  const endPoint = `${props.field}s`;
-  const { loading, lists, error } = useList(endPoint);
-  if (error)
-    return (
-      <div>
-        <h1>Oops! Something happened.</h1>
-        <h3>{error}</h3>
-      </div>
-    );
-  return (
-    <FilterItem
-      field={props.field}
-      data={lists}
-      loading={loading}
-      disabled={props.disabled}
-      sendFilter={props.updateFilter}
-    />
-  );
-}
-
-function FilterItem(props) {
-  const handleChange = selectedOption => {
-    let data = null;
-    if (!(selectedOption.length === undefined)) {
-      data = selectedOption.map(function(item) {
-        return item.value;
-      });
-    } else {
-      data = [selectedOption.value];
-    }
-
-    props.sendFilter(data);
-  };
-
-  const options = props.data.map(function(item, index) {
-    return { value: props.special ? index + 1 : item, label: item };
-  });
-  return (
-    <div className="filter">
-      <h3 className="capital">{props.field}s </h3>
-      {props.field === "offence" ? (
-        <Select
-          id={props.field}
-          onChange={handleChange}
-          isLoading={props.loading}
-          placeholder={"Choose offence (required)"}
-          options={options}
-        />
-      ) : (
-        <Select
-          id={props.field}
-          isMulti
-          onChange={handleChange}
-          isLoading={props.loading}
-          placeholder={"All " + props.field + "s"}
-          options={options}
-          isDisabled={props.disabled}
-        />
-      )}
-    </div>
-  );
-}
-
 function Results(props) {
   const { loading, result, error } = useMultiSearch(props.filters);
   let resultsRef = useRef();
   useEffect(() => {
+    //smooth scrollling to content on load
     if (resultsRef.current) {
       window.scrollTo({
         behavior: "smooth",
@@ -122,12 +57,13 @@ function Results(props) {
         <h3>{error.toString()}</h3>
       </div>
     );
-
+  //sort the result from lowest to highest year
   const sortResult = result.sort();
-  const label = sortResult.map(function(value, index) {
+  //return 1D from 2D array
+  const label = sortResult.map(function(value) {
     return value[0];
   });
-  const data = sortResult.map(function(value, index) {
+  const data = sortResult.map(function(value) {
     return value[1];
   });
 
