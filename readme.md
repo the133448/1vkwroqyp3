@@ -4,4 +4,4 @@
 
 This React-App was created for the assignment
 
-## build status: [![Netlify Status](https://api.netlify.com/api/v1/badges/9fd6773e-49b5-4f54-8c48-f6f5a298f120/deploy-status)](https://assignment-cab230.netlify.com/)
+## build status: [![Netlify Status](https://api.netlify.com/api/v1/badges/258cd05c-0ac7-48de-ac6a-169973b5f8ba/deploy-status)](https://app.netlify.com/sites/assignment-cab230/deploys)

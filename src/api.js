@@ -5,7 +5,7 @@ let API_PATH = null;
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
   API_PATH = "https://cab230.hackhouse.sh/";
-  //API_PATH = "https://cab230.bgscoffee.com/";
+  //API_PATH = "https://cab230-api.bgscoffee.com/";
 } else {
   API_PATH = "/api/";
 }
