@@ -182,7 +182,7 @@ const wrapperStyles = {
 };
 
 function getLongNumberFormat(num) {
-  console.log("NUM", num);
+  console.log(num);
   num = num + ""; // coerce to string
   if (num < 1000) {
     // var n = num.toFixed(3)
@@ -234,10 +234,8 @@ function GenLegend(props) {
     .attr("stop-color", function(d) {
       return d.color;
     });
-
-  var linearGradientPop = defs
-    .append("linearGradient")
-    .attr("id", "#legend-pop");
+  const popId = "#legend-pop".concat(props.lower, props.upper);
+  var linearGradientPop = defs.append("linearGradient").attr("id", popId);
 
   // horizontal gradient
   linearGradientPop
@@ -249,13 +247,20 @@ function GenLegend(props) {
   // #ffffff", "#74C67A", "#1D9A6C", "#000102
 
   // append multiple color stops by using D3's data/enter step
+  // to calc 2nd/3rd value x% we need to do: (lower-value)/(lower-upper) *100
+
+  const diff = props.lower - props.upper;
+  let secondStop = ((props.lower - props.lower / 2) / diff) * 100 + "%";
+  let thirdStop = ((props.lower - props.upper * 2) / diff) * 100 + "%";
+  console.log("2: ", secondStop, "% 3:", thirdStop, "%.");
+  // .range(["#fff7ec", "#fdbb84", "#d7301f", "#7f0000"]);
   linearGradientPop
     .selectAll("stop")
     .data([
-      { offset: "0%", color: "#ffffff" },
-      { offset: "12.5%", color: "#74C67A" },
-      { offset: "33%", color: "#1D9A6C" },
-      { offset: "100%", color: "#000102" }
+      { offset: "0%", color: "#fff7ec" },
+      { offset: secondStop, color: "#fdbb84" },
+      { offset: thirdStop, color: "#d7301f" },
+      { offset: "100%", color: "#7f0000" }
     ])
     .enter()
     .append("stop")
@@ -294,7 +299,10 @@ function GenLegend(props) {
     .attr("y", 30)
     .attr("width", 400)
     .attr("height", 15)
-    .style("fill", `url(#${props.name})`);
+    .style(
+      "fill",
+      `url(#${props.name === "#legend-count" ? "#legend-count" : popId})`
+    );
 
   //create tick marks
   var xLeg = d3
@@ -302,13 +310,20 @@ function GenLegend(props) {
     .domain([props.lower, props.upper])
     .range([10, 400]);
 
-  var axisLeg = d3.axisBottom(xLeg).tickValues(props.scale.domain());
-
+  var axisLegCount = d3
+    .axisBottom(xLeg)
+    .tickValues(props.scale.domain())
+    .tickFormat(d3.format(".2s"));
+  var axisLegPop = d3
+    .axisBottom(xLeg)
+    .tickValues([props.lower, props.lower / 2, props.upper])
+    .tickFormat(d3.format(".2s"));
+  //.tickFormat(getLongNumberFormat());
   svgLegend
     .attr("class", "axis")
     .append("g")
     .attr("transform", "translate(0, 40)")
-    .call(axisLeg);
+    .call(props.name === "#legend-count" ? axisLegCount : axisLegPop);
   return <> </>;
 }
 
@@ -366,7 +381,7 @@ function Results(props) {
 
   const popCol = scaleLinear()
     .domain([max, max / 2, min * 2, min])
-    .range(["#ffffff", "#74C67A", "#1D9A6C", "#000102"]);
+    .range(["#fff7ec", "#fdbb84", "#d7301f", "#7f0000"]);
   //100  0.5
   const countCol = scaleLinear()
     .domain([0, maxCount / 8, maxCount / 3, maxCount])
