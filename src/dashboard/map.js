@@ -181,6 +181,7 @@ const wrapperStyles = {
   maxWidth: 980
 };
 
+//helper function to turn 100000 into 100k
 function getLongNumberFormat(num) {
   console.log(num);
   num = num + ""; // coerce to string
@@ -197,6 +198,7 @@ function getLongNumberFormat(num) {
   return (num / 1000).toFixed(num % 1000 !== 0) + "k";
 }
 
+//helper function to handle d3 formatting needs....
 function d3NonSIformat(d) {
   if (d > 1) {
     return d3.format(".2s")(d);
@@ -211,7 +213,7 @@ function GenLegend(props) {
   var defs = svgLegend.append("defs");
 
   // append a linearGradient element to the defs and give it a unique id
-
+  //as offset stop valules are always the same the id can be the same :)
   var linearGradientCount = defs
     .append("linearGradient")
     .attr("id", "#legend-count");
@@ -222,9 +224,6 @@ function GenLegend(props) {
     .attr("y1", "0%")
     .attr("x2", "100%")
     .attr("y2", "0%");
-
-  // #ffffff", "#74C67A", "#1D9A6C", "#000102
-
   // append multiple color stops by using D3's data/enter step
   linearGradientCount
     .selectAll("stop")
@@ -242,6 +241,7 @@ function GenLegend(props) {
     .attr("stop-color", function(d) {
       return d.color;
     });
+  //pop offset values are calculated dynamically so give it a unique id
   const popId = "#legend-pop".concat(props.lower, props.upper);
   var linearGradientPop = defs.append("linearGradient").attr("id", popId);
 
@@ -251,8 +251,6 @@ function GenLegend(props) {
     .attr("y1", "0%")
     .attr("x2", "100%")
     .attr("y2", "0%");
-
-  // #ffffff", "#74C67A", "#1D9A6C", "#000102
 
   // append multiple color stops by using D3's data/enter step
   // to calc 2nd/3rd value x% we need to do: (lower-value)/(lower-upper) *100
@@ -317,13 +315,14 @@ function GenLegend(props) {
     .scaleLinear()
     .domain([props.lower, props.upper])
     .range([10, 400]);
-
+  //use
   var axisLegCount = d3
     .axisBottom(xLeg)
-    .tickValues(props.scale.domain())
+    .tickValues([props.scale.domain()])
     .tickFormat(d3NonSIformat);
   var axisLegPop = d3
     .axisBottom(xLeg)
+    //we dont use the domain call here so we only show 3 values, much neater!
     .tickValues([props.lower, props.lower / 2, props.upper])
     .tickFormat(d3NonSIformat);
   //.tickFormat(getLongNumberFormat());
@@ -340,7 +339,7 @@ function Results(props) {
   const [type, setType] = useState(0);
   const [mapLoading, setMapLoading] = useState(true);
   let resultsRef = useRef();
-
+  //toggle beetween pop and count graph
   const toggleType = () => {
     if (type) setType(0);
     else setType(1);
@@ -353,9 +352,9 @@ function Results(props) {
         <h3>{error.toString()}</h3>
       </div>
     );
-
+  //get population data
   var data = require("./pop.json");
-
+  //combine population data with result
   result = result.map((obj1, index) => {
     const obj2 = data[index];
     //assert: obj1.name === obj2.name
@@ -369,7 +368,7 @@ function Results(props) {
         : undefined
     };
   });
-
+  //make a results array so that we can call results["Brisbane City Council"].
   var results = {};
   for (var i = 0; i < result.length; i++) {
     results[result[i].lga] = {
@@ -379,18 +378,23 @@ function Results(props) {
       result: result[i].result
     };
   }
+  //find just numbers in array
   const numsOnly = result.map(({ result }) => result);
+  //find min/max capita count
   const min = Math.min(...numsOnly.filter(isFinite));
   const max = Math.max(...numsOnly.filter(isFinite));
+  //get numbs only
   const countOnly = result.map(({ Count }) => Count);
+  //find just max count of offences. (lower will always be 0)
   const maxCount = Math.max(...countOnly);
-  console.log("min: ", min);
-  console.log("max: ", max);
 
+  //piecewise scale for pop
   const popCol = scaleLinear()
     .domain([max, max / 2, min * 2, min])
     .range(["#fff7ec", "#fdbb84", "#d7301f", "#7f0000"]);
   //100  0.5
+
+  //piecewise scale for offences.
   const countCol = scaleLinear()
     .domain([0, maxCount / 8, maxCount / 3, maxCount])
     .range(["#ffffff", "#74C67A", "#1D9A6C", "#000102"]);
@@ -402,6 +406,7 @@ function Results(props) {
         top: resultsRef.current.offsetTop
       });
     }
+    //rebuild tooltips once data and map has loaded.
     ReactTooltip.rebuild();
   };
   if (!loading) {
@@ -413,7 +418,7 @@ function Results(props) {
         ""
       ) : (
         <Fragment>
-          {/* test */}
+          {/* show correct type*/}
           <h1>By: {type ? "Offences per Capita" : "Offence Count"}</h1>
           {loading ? <h1>loading</h1> : ""}
           <a onClick={toggleType} className="float">
@@ -421,6 +426,7 @@ function Results(props) {
           </a>
         </Fragment>
       )}
+      {/* call legend generation code */}
       <GenLegend
         scale={countCol}
         upper={maxCount}
@@ -436,6 +442,7 @@ function Results(props) {
         string="Offences/Capita Legend"
       />
       <div className="legends">
+        {/* //legends live here */}
         <svg id="legend-count" className="legend" />
         <svg id="legend-pop" className="legend" />
       </div>
@@ -454,16 +461,22 @@ function Results(props) {
           <Geographies
             geography="/maps/qld.json"
             onGeographyPathsLoaded={handleLoad}
+            //if optimisation isnt disabled we cant hotreload.
             disableOptimization={true}
           >
             {(geographies, projection) =>
               geographies.map((geography, i) => {
+                //get LGA name from topojson data
                 let lgaName = geography.properties.qld_lga__2 + " COUNCIL";
 
                 // var resultObject = result.find(
                 //   x => x.lga.toUpperCase() === lgaName.toUpperCase()
                 // );
 
+                //see if topojson name exists in results.
+                //we do the check this away around as topojson could have
+                //3 brisbane city councils
+                //if not found just set it all as none.
                 if (!results[lgaName]) {
                   results[lgaName] = {
                     lga: lgaName,
@@ -492,6 +505,7 @@ function Results(props) {
                     geography={geography}
                     projection={projection}
                     style={{
+                      //correct filling in based on the type
                       default: {
                         fill: type
                           ? isFinite(result)
