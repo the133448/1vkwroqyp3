@@ -183,7 +183,6 @@ const wrapperStyles = {
 
 //helper function to turn 100000 into 100k
 function getLongNumberFormat(num) {
-  console.log(num);
   num = num + ""; // coerce to string
   if (num < 1000) {
     // var n = num.toFixed(3)
@@ -210,6 +209,7 @@ function d3NonSIformat(d) {
 function GenLegend(props) {
   let svgLegend = d3.select(props.name);
   svgLegend.html("");
+
   var defs = svgLegend.append("defs");
 
   // append a linearGradient element to the defs and give it a unique id
@@ -258,7 +258,11 @@ function GenLegend(props) {
   const diff = props.lower - props.upper;
   let secondStop = ((props.lower - props.lower / 2) / diff) * 100 + "%";
   let thirdStop = ((props.lower - props.upper * 2) / diff) * 100 + "%";
-  console.log("2: ", secondStop, "% 3:", thirdStop, "%.");
+  if (!isFinite(secondStop)) {
+    secondStop = "33%";
+    thirdStop = "66%";
+  }
+
   // .range(["#fff7ec", "#fdbb84", "#d7301f", "#7f0000"]);
   linearGradientPop
     .selectAll("stop")
