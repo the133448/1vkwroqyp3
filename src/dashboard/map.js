@@ -322,7 +322,7 @@ function GenLegend(props) {
   //use
   var axisLegCount = d3
     .axisBottom(xLeg)
-    .tickValues([props.scale.domain()])
+    .tickValues(props.scale.domain())
     .tickFormat(d3NonSIformat);
   var axisLegPop = d3
     .axisBottom(xLeg)
