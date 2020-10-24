@@ -1,2 +1,2 @@
-/api/*  https://cab230-api.bgscoffee.com/:splat  200
+/api/*  https://capstone-ato-api.herokuapp.com/:splat  200
 /*    /index.html   200
