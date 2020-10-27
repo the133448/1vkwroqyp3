@@ -70,8 +70,8 @@ export function DashboardPage(props) {
       <div className="navbar">
         <h4 className="user">Logged in as {localStorage.getItem("EMAIL")}</h4>
 
-        <Link to="/logout" className="logout">
-          Logout{" "}
+        <Link to="/logout">
+          <button className={"dash-btn"}>Logout</button>
         </Link>
       </div>
       <div>{props.children}</div>
@@ -99,6 +99,13 @@ export function DashboardPage2(props) {
           </div>
           <div className="title nav-mid">Dashboard - {name}</div>
           <div className="nav-right">
+            <h5 className="user">
+              Logged in as {localStorage.getItem("EMAIL")}
+            </h5>
+
+            <Link to="/logout">
+              <button className={"dash-btn"}>Logout</button>
+            </Link>
             <img className="logo-main" src="../logo-ato.png" alt="ATO Logo" />
           </div>
         </div>
