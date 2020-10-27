@@ -7,7 +7,7 @@ import {
   Route,
   Redirect,
   Switch,
-  Link
+  Link,
 } from "react-router-dom";
 
 import { AuthPage } from "./login";
@@ -54,7 +54,7 @@ function Routing() {
         />
         <Route
           path="/login"
-          render={props => {
+          render={(props) => {
             console.log("Requesting /login View");
             switch (isLoggedIn()) {
               case 0:
@@ -69,7 +69,7 @@ function Routing() {
         />
         <Route
           path="/register"
-          render={props => {
+          render={(props) => {
             console.log("Requesting /register View");
             switch (isLoggedIn()) {
               case 0:
@@ -84,7 +84,7 @@ function Routing() {
         />
         <Route
           path="/logout"
-          render={props => {
+          render={(props) => {
             console.log("Requesting /logout View");
             logOut();
             return <Redirect to="/login#logout" />;
@@ -103,16 +103,25 @@ function App() {
 
   return (
     <div>
-      <Routing />
-      <footer className="footer">
-        <p>
-          {process.env.REACT_APP_NAME}-{process.env.REACT_APP_VERSION}(Built:
-          {/* This pravl gets executed in both dev and prod to tell 
-          what version the app is running */}
-          {preval`module.exports = new Date().toLocaleString();`}.) (Daniel
-          Johns - n9961119)
-        </p>
-      </footer>
+      <div className="my-pusher">
+        <div className="Site-content">
+          <Routing />
+        </div>
+        <div className="Footer">
+          <div className="Footer-credits">
+            <span className="Footer-credit">
+              Created by group Loona QUT ATO Capstone
+            </span>{" "}
+            <span className="Footer-credit">
+              {process.env.REACT_APP_NAME}-{process.env.REACT_APP_VERSION}[
+              {process.env.DEPLOY_ID}] (Built:
+              {preval`module.exports = new Date().toLocaleString();`}.)
+            </span>
+          </div>
+
+          {/* <img className="stripes" src="./stripes.svg" alt="Logo" /> */}
+        </div>
+      </div>
     </div>
   );
 }

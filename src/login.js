@@ -20,7 +20,7 @@ export function AuthPage(props) {
 //Both login and Register are identical in that they use the same form page
 
 function LoginPage(props) {
-  document.title = "Login | POLICE ADMIN";
+  document.title = "Login | ATO DASHBOARD";
   const [loginData, setloginData] = useState(null);
   const { loading, error } = useLogin(loginData, true);
 
@@ -38,7 +38,7 @@ function LoginPage(props) {
 }
 
 function RegisterPage(props) {
-  document.title = "Register | POLICE ADMIN";
+  document.title = "Register | ATO Dashboard";
   const [loginData, setloginData] = useState(null);
   const { loading, error } = useLogin(loginData, false);
   //track sucesfully login as code 111
@@ -71,11 +71,11 @@ function FormPage(props) {
 
   return (
     <div className="login App">
-      <img className="logo" src="./logo-min.png" alt="QLD Police Logo" />
+      <img className="logo" src="./logo-min.png" alt="ATO Logo" />
       <div className="login-screen">
         <div className="app-title">
           <h1>{props.login ? "Login" : "Register"}</h1>
-          <h3>to QLD POLICE</h3>
+          <h3>to ATO CAPSTONE</h3>
           <h3>Dashboard</h3>
         </div>
         {props.error ? (
@@ -129,8 +129,7 @@ function FormPage(props) {
           <button
             type="submit"
             className="btn btn-primary btn-large btn-block"
-            disabled={props.loading}
-          >
+            disabled={props.loading}>
             {props.loading ? "Please wait" : props.login ? "Login" : "Register"}
           </button>
         </form>
@@ -141,8 +140,7 @@ function FormPage(props) {
           </p>
           <Link
             to={props.login ? "/register" : "/login"}
-            className="sign-up-text"
-          >
+            className="sign-up-text">
             {props.login ? "Register" : "Login"} Now
           </Link>
         </div>

@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef, Fragment } from "react";
-import { Link, Redirect } from "react-router-dom";
-import { useList, useSearch, logOut } from "../api";
+import React, { useState, useRef, Fragment } from "react";
+
+import { useList, useSearch } from "../api";
 import { Loader } from "./common";
 import { scaleLinear } from "d3-scale";
 import ReactTooltip from "react-tooltip";
@@ -10,7 +10,7 @@ import {
   ComposableMap,
   ZoomableGroup,
   Geographies,
-  Geography
+  Geography,
 } from "react-simple-maps";
 
 import Select from "react-select";
@@ -28,7 +28,7 @@ function MonthFilterItem(props) {
     "September",
     "October",
     "November",
-    "December"
+    "December",
   ];
   return (
     <FilterItem
@@ -63,10 +63,10 @@ function DataFilterItem(props) {
 }
 
 function FilterItem(props) {
-  const handleChange = selectedOption => {
+  const handleChange = (selectedOption) => {
     let data = null;
     if (!(selectedOption.length === undefined)) {
-      data = selectedOption.map(function(item) {
+      data = selectedOption.map(function (item) {
         return item.value;
       });
     } else {
@@ -76,7 +76,7 @@ function FilterItem(props) {
     props.sendFilter(data);
   };
 
-  const options = props.data.map(function(item, index) {
+  const options = props.data.map(function (item, index) {
     return { value: props.special ? index + 1 : item, label: item };
   });
   return (
@@ -124,7 +124,7 @@ function Offences(props) {
     age,
     gender,
     year,
-    month
+    month,
   };
 
   const handleSubmit = () => {
@@ -162,8 +162,7 @@ function Offences(props) {
             id="search-button"
             type="button"
             disabled={props.loading ? true : offenceValidate ? false : true}
-            onClick={() => handleSubmit()}
-          >
+            onClick={() => handleSubmit()}>
             {offenceValidate
               ? props.loading
                 ? "Loading"
@@ -178,7 +177,7 @@ function Offences(props) {
 
 const wrapperStyles = {
   width: "100%",
-  maxWidth: 980
+  maxWidth: 980,
 };
 
 //helper function to turn 100000 into 100k
@@ -231,14 +230,14 @@ function GenLegend(props) {
       { offset: "0%", color: "#ffffff" },
       { offset: "12.5%", color: "#74C67A" },
       { offset: "33%", color: "#1D9A6C" },
-      { offset: "100%", color: "#000102" }
+      { offset: "100%", color: "#000102" },
     ])
     .enter()
     .append("stop")
-    .attr("offset", function(d) {
+    .attr("offset", function (d) {
       return d.offset;
     })
-    .attr("stop-color", function(d) {
+    .attr("stop-color", function (d) {
       return d.color;
     });
   //pop offset values are calculated dynamically so give it a unique id
@@ -270,14 +269,14 @@ function GenLegend(props) {
       { offset: "0%", color: "#fff7ec" },
       { offset: secondStop, color: "#fdbb84" },
       { offset: thirdStop, color: "#d7301f" },
-      { offset: "100%", color: "#7f0000" }
+      { offset: "100%", color: "#7f0000" },
     ])
     .enter()
     .append("stop")
-    .attr("offset", function(d) {
+    .attr("offset", function (d) {
       return d.offset;
     })
-    .attr("stop-color", function(d) {
+    .attr("stop-color", function (d) {
       return d.color;
     });
 
@@ -369,7 +368,7 @@ function Results(props) {
       pop: obj2.pop,
       result: isFinite(obj2.pop / obj1.Count)
         ? obj2.pop / obj1.Count
-        : undefined
+        : undefined,
     };
   });
   //make a results array so that we can call results["Brisbane City Council"].
@@ -379,7 +378,7 @@ function Results(props) {
       lga: result[i].lga,
       Count: result[i].Count,
       pop: result[i].pop,
-      result: result[i].result
+      result: result[i].result,
     };
   }
   //find just numbers in array
@@ -407,7 +406,7 @@ function Results(props) {
     if (resultsRef.current) {
       window.scrollTo({
         behavior: "smooth",
-        top: resultsRef.current.offsetTop
+        top: resultsRef.current.offsetTop,
       });
     }
     //rebuild tooltips once data and map has loaded.
@@ -425,9 +424,9 @@ function Results(props) {
           {/* show correct type*/}
           <h1>By: {type ? "Offences per Capita" : "Offence Count"}</h1>
           {loading ? <h1>loading</h1> : ""}
-          <a onClick={toggleType} className="float">
+          <button onClick={toggleType} className="float">
             <p>Colour by {type ? "Offences" : "Offences per Capita"}</p>
-          </a>
+          </button>
         </Fragment>
       )}
       {/* call legend generation code */}
@@ -453,21 +452,19 @@ function Results(props) {
 
       <ComposableMap
         projectionConfig={{
-          scale: 205
+          scale: 205,
         }}
         height={1500}
         style={{
           width: "100%",
-          height: "auto"
-        }}
-      >
+          height: "auto",
+        }}>
         <ZoomableGroup center={[146, -23]} zoom={18} disablePanning>
           <Geographies
             geography="/maps/qld.json"
             onGeographyPathsLoaded={handleLoad}
             //if optimisation isnt disabled we cant hotreload.
-            disableOptimization={true}
-          >
+            disableOptimization={true}>
             {(geographies, projection) =>
               geographies.map((geography, i) => {
                 //get LGA name from topojson data
@@ -487,7 +484,7 @@ function Results(props) {
                     Count: 0,
                     pop: "Unknown",
                     result: undefined,
-                    exists: false
+                    exists: false,
                   };
                 }
                 const { Count, pop, result } = results[lgaName];
@@ -518,20 +515,20 @@ function Results(props) {
                           : countCol(Count),
                         stroke: "#607D8B",
                         strokeWidth: 0.1,
-                        outline: "none"
+                        outline: "none",
                       },
                       hover: {
                         fill: "#FF5722",
                         stroke: "#607D8B",
                         strokeWidth: 0.1,
-                        outline: "none"
+                        outline: "none",
                       },
                       pressed: {
                         fill: "#FF5722",
                         stroke: "#607D8B",
                         strokeWidth: 0.1,
-                        outline: "none"
-                      }
+                        outline: "none",
+                      },
                     }}
                   />
                 );

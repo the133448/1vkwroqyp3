@@ -2,7 +2,10 @@
   font-family: sans-serif;
   text-align: center;
 }
-
+@font-face {
+  font-family: "National";
+  src: url("/National.woff") format("woff");
+}
 *:focus {
   outline: none;
 }
@@ -16,11 +19,6 @@ body {
   min-height: 85%;
   padding: 50px;
 }
-body::after {
-  content: "";
-  display: block;
-  height: 100px;
-}
 
 body {
   min-height: 100%;
@@ -31,6 +29,9 @@ body {
 
 a {
   text-decoration: none;
+}
+.selected-new {
+  background-color: #f5d815 !important;
 }
 .login {
   margin: 20px auto;
@@ -153,8 +154,12 @@ input:focus {
   color: rgb(202, 126, 118);
 }
 .logo {
-  width: 25%;
+  /* width: 25%; */
   margin-bottom: 10%;
+}
+.logo-main {
+  width: 100px;
+  /* margin-bottom: 10%; */
 }
 
 table {
@@ -216,22 +221,52 @@ div.content {
   }
 }
 
+.title {
+  font-family: "National";
+  white-space: nowrap;
+  font-size: 2em;
+  display: inline-block;
+  text-align: center;
+}
+
+@media (min-width: 992px) {
+  .title {
+    font-size: 2em;
+    /* width: calc(30% - 25px); */
+  }
+  .nav-wrapper {
+    height: 100px;
+  }
+}
+
+@media only screen and (min-width: 1500px) {
+  .title {
+    font-size: 3em;
+    /* width: calc(50% - 25px); */
+  }
+  .nav-wrapper {
+    height: unset;
+  }
+}
+
 .navbar {
   display: flex;
-  justify-content: space-between;
-  background-color: #6002ee;
-  width: 100%;
-  min-height: 50px;
-  margin-bottom: 20px;
-  line-height: 20px;
-
-  padding-top: 15px;
-  padding-bottom: 15px;
+  align-items: center;
+  background-color: #002341;
+  padding: 10px;
   color: #fff;
-
-  padding: 10px 15px;
-  border-radius: 5px;
 }
+.nav-left {
+  display: flex;
+  flex: 1;
+}
+
+.nav-right {
+  justify-content: flex-end;
+  display: flex;
+  flex: 1;
+}
+
 .nav-btn {
   color: #fff;
 
@@ -358,18 +393,42 @@ select::-ms-expand {
 .capital {
   text-transform: capitalize;
 }
-footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  text-align: center;
-  left: 0;
-  right: 0;
-  color: #444;
-  border-top: 1px solid #d2d6de;
-  z-index: -1;
+
+.my-pusher {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
 }
 
+.my-pusher > .footer {
+  flex: 1;
+}
+
+.modal-pusher {
+  display: flex;
+  /* min-height: 100vh; */
+  flex-direction: column;
+}
+
+.modal-pusher > .footer {
+  flex: 1;
+}
+
+.Site-content {
+  flex: 1;
+}
+
+.Footer {
+  padding-top: 1.5rem;
+
+  color: #999;
+  font-size: 0.85em;
+  overflow-x: hidden;
+  text-align: center;
+}
+.Footer-credits {
+  margin: 10px;
+}
 .padded {
   padding: 50px;
 }
@@ -502,6 +561,7 @@ footer {
   text-align: center;
   box-shadow: 2px 2px 3px #999;
   cursor: pointer;
+  border: 0;
 }
 @media (max-width: 900px) {
   .float {
@@ -603,4 +663,29 @@ footer {
   font-family: Consolas, courier;
   fill: #000;
   font-size: 9pt;
+}
+
+.btn-group button {
+  background-color: #ffffff; /* Green background */
+  border: 0;
+  color: #666666; /* White text */
+  padding: 10px 24px; /* Some padding */
+  cursor: pointer; /* Pointer/hand icon */
+  float: left; /* Float the buttons side by side */
+}
+
+.btn-group button:not(:last-child) {
+  border-right: none; /* Prevent double borders */
+}
+
+/* Clear floats (clearfix hack) */
+.btn-group:after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+/* Add a background color on hover */
+.btn-group button:hover {
+  background-color: #f5d815;
 }

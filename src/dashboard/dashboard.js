@@ -7,27 +7,37 @@ import { GraphPage } from "./graph";
 import { MapPage } from "./map";
 
 function SideBar(props) {
+  // return (
+  //   <div class="btn-group">
+  //     <button>Apple</button>
+  //     <button>Samsung</button>
+  //     <button>Sony</button>
+  //   </div>
+  // );
   return (
     //simple tracking which one is active and applying a differnt CSS
-    <aside className="sidebar">
+    <div className="btn-group">
       <Link to="/dashboard/table">
         <button
-          className={props.type === 1 ? "dash-btn table active" : "dash-btn"}
-        >
+          className={
+            props.type === 1 ? "dash-btn table selected-new" : "dash-btn"
+          }>
           Stats
         </button>
       </Link>
       <Link to="/dashboard/graph">
-        <button className={props.type === 2 ? "dash-btn active" : "dash-btn"}>
+        <button
+          className={props.type === 2 ? "dash-btn selected-new" : "dash-btn"}>
           Graphs
         </button>
       </Link>
       <Link to="/dashboard/map">
-        <button className={props.type === 3 ? "dash-btn active" : "dash-btn"}>
+        <button
+          className={props.type === 3 ? "dash-btn selected-new" : "dash-btn"}>
           Maps
         </button>
       </Link>
-    </aside>
+    </div>
   );
 }
 
@@ -45,12 +55,11 @@ export function CurrentView(props) {
 export function Dashboard(props) {
   //Main dashboard page with sidedbar, navbar and content
   return (
-    <DashboardPage>
-      <SideBar type={props.type} />
+    <DashboardPage2 type={props.type} left={<SideBar type={props.type} />}>
       <div className="content animated fadeIn ">
         <CurrentView type={props.type} />
       </div>
-    </DashboardPage>
+    </DashboardPage2>
   );
 }
 
@@ -67,6 +76,36 @@ export function DashboardPage(props) {
       </div>
       <div>{props.children}</div>
     </div>
+  );
+}
+
+export function DashboardPage2(props) {
+  let name = "";
+  if (props.type === 1) {
+    name = "Stats";
+  } else if (props.type === 2) {
+    name = "Charts";
+  } else if (props.type === 3) {
+    name = "Maps";
+  }
+  return (
+    <>
+      {/* <CustomSideBar></CustomSideBar> */}
+      <div className="animated fadeIn">
+        <div className="navbar">
+          <div className="nav-left">
+            {props.left}
+            {props.right}
+          </div>
+          <div className="title nav-mid">Dashboard - {name}</div>
+          <div className="nav-right">
+            <img className="logo-main" src="../logo-ato.png" alt="ATO Logo" />
+          </div>
+        </div>
+
+        <div className="middle-center-2">{props.children}</div>
+      </div>
+    </>
   );
 }
 
