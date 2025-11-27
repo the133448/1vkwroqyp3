@@ -12,7 +12,7 @@
     "react-chartjs-2": "2.7.6",
     "react-dom": "16.8.6",
     "react-router-dom": "5.0.0",
-    "react-scripts": "2.1.8",
+    "react-scripts": "5.0.1",
     "react-select": "2.4.3",
     "react-simple-maps": "0.12.1",
     "react-smart-data-table": "0.7.0",
